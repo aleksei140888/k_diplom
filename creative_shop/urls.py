@@ -19,6 +19,8 @@ from django.urls import path, include
 from creative_shop import views
 
 urlpatterns = [
-    path('', views.all_shops, name='all_shops'),
+    path('product/<int:product_id>/', views.product, name='product'),
+    path('card/<int:card_id>/', views.card, name='shop_card'),
     path('<int:shop_id>/', views.shop, name='shop'),
+    path('', views.all_shops, name='all_shops'),
 ]

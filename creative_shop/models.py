@@ -1,6 +1,7 @@
 from django.db import models
 
 from live_portal import settings
+from live_portal.utils import to_dict_list
 from main_site.models import User
 
 
@@ -105,9 +106,27 @@ class Card(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user': self.user.to_dict(),
+            'shop': self.shop,
+            'status': self.status,
+            'products': to_dict_list(self.products.all()),
+        }
+
 
 class CardItem(models.Model):
     db_table = "shops_card_items"
 
     card = models.ForeignKey(Card, related_name="products", on_delete=models.CASCADE)
     item = models.ForeignKey(Product, related_name="products", on_delete=models.CASCADE)
+
+    def to_dict(self):
+        return {
+            'id': self.item.id,
+            'name': self.item.name,
+            'new_price': self.item.new_price,
+            'photo_filename': self.item.photo_filename,
+            'category': self.item.category.name,
+        }

@@ -1,0 +1,62 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mb-3" style="max-width: 840px;  margin-left: auto;margin-right: auto; margin-top: 50px; ">
+	<div class="row no-gutters">
+		<div class="col-md-4" style="margin-top: auto; margin-bottom: auto;">
+			<img src="https://i.pinimg.com/originals/df/f5/a2/dff5a2162694776874477afd208f49d7.jpg" class="card-img" alt="...">
+		</div>
+		<div class="col-md-8">
+			<div class="card-body">
+
+				<div class="row" style="">
+					<div class="col-12" style="text-align:center;">
+						<h4 style=""><big>{{ product.name }}</big></h4>
+
+
+					</div>
+				</div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-6">{{ product.category.name }}</div>
+                    <div class="col-6">Рейтинг ({{ product.rating }} of 5)</div>
+                </div>
+                <hr>
+                <p>Описание:</p>
+				<p>{{ product.description }}</p>
+                <hr>
+
+
+
+				<h2 class="card-title" style="float:left; margin-left: auto;margin-right: auto;">
+                    <span>Price: {{ product.new_price }}</span>
+                    <small>
+                        <del style="font-size: 15px; color:red; vertical-align:top">
+                            {{ product.old_price}}
+                        </del>
+                    </small>
+                </h2>
+				<div class="row">
+					<div style="margin-left: auto;
+					margin-right: auto;"><button type="button" class="btn btn-outline-success" style="width: 250px;">Купить</button></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

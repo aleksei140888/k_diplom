@@ -28,6 +28,7 @@ def home_page(request):
         'shops': shops,
         'products': products,
         'mcs': mcs_dict,
+        'card_products_count': request.user.cards.first().products.count() if request.user.cards.first() and request.user.cards.first().products.first() else '0'
     }
     return render(request, 'home_page.html', context=context)
 

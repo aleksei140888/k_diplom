@@ -7,7 +7,20 @@
 {% block content %}
     <div class="container">
         <div class="col-12 col-md-4">
-            Профиль
+            <div>
+                {{ card.status }}
+
+            </div>
+            <div class="row" style="margin-left: auto;margin-right: auto; margin-bottom: 20px;">
+					<p style="margin-top: auto; margin-bottom: auto; margin-right: 30px;">Метод доставки: </p>
+					<div class="btn-group" data-toggle="buttons">
+						{% for method in delivery_methods %}
+                            <label class="btn btn-outline-secondary">
+                                <input type="radio" name="method_dev" id="{{ method.slug }}"> {{ method.name }} ({{ method.price }}грн.)
+                            </label>
+						{% endfor %}
+					</div>
+				</div>
         </div>
     </div>
 {% endblock %}

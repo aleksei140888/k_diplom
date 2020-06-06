@@ -70,7 +70,7 @@
                         <p>{{ product.description }}</p>
                         <p style="height: 20px;">Рейтинг: {{ product.rating }}</p>
                         <hr>
-                        <a href="#" class="btn btn-lg btn-success" style="margin-bottom: 15px;">Купить</a>
+                        <a href="{% url 'product' product.id %}" class="btn btn-lg btn-success" style="margin-bottom: 15px;">Купить</a>
                     </div>
                 </div>
             {% endfor %}
