@@ -1,0 +1,127 @@
+{% extends 'base_template.html' %}
+{% load static %}
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="row" style="min-height: 400px;">
+        <div class="col-12 col-md-4"></div>
+        <div class="col-12 col-md-4" style="margin-top: 0px;">
+            <form action="{% url 'auth_sign' %}" class="form-signin">
+              <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
+                <label for="inputEmail" class="sr-only">Логин</label>
+                <input name="username" type="text" id="inputEmail" class="form-control" placeholder="Email address" required=""
+                       autofocus="">
+                <label for="inputPassword" class="sr-only">Пароль</label>
+                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+        </div>
+        <div class="col-12 col-md-4"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let MyApplication = angular.module('MyApplication',[]);
+
+        MyApplication.config(['$interpolateProvider', function($interpolateProvider) {
+            $interpolateProvider.startSymbol('#{');
+            $interpolateProvider.endSymbol('}#');
+        }]);
+
+        MyApplication.controller('UserProfileController', ['$scope', 'requestService', function($scope, requestService) {
+            $scope.auth_content = {};
+            $scope.auth_type = [];
+
+            $scope.change_active_tab = function(tab) {
+                $scope.active_tab = tab;
+            }
+
+            $scope.load_profile = function() {
+                requestService.load_profile()
+                .then(function(resp) {
+                    if (resp.status === 'success') {
+                        $scope.profile_content = resp.detail;
+                    } else {
+
+                    }
+                });
+            }
+
+            $scope.load_profile()
+
+            $scope.change_password_form_submit = function (data) {
+                if (!data.old_password || !data.new_password || !data.confirm_new_password) {
+                    alert('Проверьте форму ввода. Вы заполнили не все поля')
+                    return false;
+                }
+
+                if (data.old_password.length < 8|| data.new_password.length < 8 || data.confirm_new_password.length < 8) {
+                    alert('Пароли должны содержать 8 или больше символов.')
+                    return false;
+                }
+
+                if (data.new_password === data.confirm_new_password) {
+                    alert('Пароли не совпадают.')
+                    return false;
+                }
+
+                requestService.change_password(data)
+                .then(function(resp) {
+                    if (resp.status === 'status') {
+                        $scope.profile_content = resp.detail;
+                    } else {
+
+                    }
+                });
+            }
+        }])
+
+        MyApplication.factory('requestService', ['$http',  function($http, $q) {
+        return {
+            load_profile: load_profile,
+            change_password: change_password,
+        };
+
+
+        function change_password(data) {
+            var request = $http({
+                method: 'post',
+                data: JSON.stringify(data),
+                url: '/change_password/'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+        function load_profile() {
+            var request = $http({
+                method: 'get',
+                url: '/load_profile/'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!(angular.isObject(response) && angular.isObject(response.data) && response.data.message)) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return $q.reject(response.data.message);
+        }
+
+    }]);
+    </script>
+{% endblock %}

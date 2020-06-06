@@ -1,0 +1,113 @@
+from django.db import models
+
+from live_portal import settings
+from main_site.models import User
+
+
+class Shop(models.Model):
+    db_table = "shops"
+
+    def __str__(self):
+        return self.name
+
+    rating = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    name = models.CharField(max_length=255, default="Мой магазин")
+    description = models.TextField(default="Описание моего прекрастного магазина")
+    owner = models.ForeignKey(User, related_name="shops", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class ProductCategory(models.Model):
+    db_table = "shops_products_category"
+
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=75)
+
+
+class Product(models.Model):
+    db_table = "shops_products"
+
+    def __str__(self):
+        return self.name
+
+    rating = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    shop = models.ForeignKey(Shop, related_name="products", on_delete=models.CASCADE)
+    category = models.ForeignKey(ProductCategory, related_name="products", on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255, default="Название товара", blank=True)
+    description = models.TextField(default="Описание товара", blank=True)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2)
+    new_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    photo_filename = models.ImageField(upload_to='product_photo', blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def get_photo_url(self):
+        return self.photo_filename
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'rating': self.rating,
+            'rating_proc': int(self.rating / 5 * 100),
+            'category': self.category.name if self.category else '',
+            'description': self.description,
+            'old_price': self.old_price,
+            'new_price': self.new_price,
+            'photo_filename': self.photo_filename.url,
+        }
+
+
+class DeliveryMethod(models.Model):
+    db_table = "shops_delivery_methods"
+
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=255, default="Метод доставки")
+    slug = models.CharField(max_length=255, default="method")
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    free_until = models.DateTimeField(auto_now_add=True)
+
+
+class ActiveDeliveryMethods(models.Model):
+    db_table = "shops_delivery_methods_active"
+
+    shop = models.ForeignKey(Shop, related_name="active_delivery_methods",
+                             on_delete=models.CASCADE)
+    delivery_method = models.ForeignKey(DeliveryMethod, related_name="for_shop", on_delete=models.CASCADE)
+    free_until = models.DateTimeField(auto_now_add=True)
+
+
+class CardStatus(models.Model):
+    db_table = "shops_card_statuses"
+
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255)
+
+
+class Card(models.Model):
+    db_table = "shops_cards"
+
+    def __str__(self):
+        return self.user.name
+
+    user = models.ForeignKey(User, related_name="cards", on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, related_name="cards", on_delete=models.CASCADE)
+    status = models.ForeignKey(CardStatus, related_name="status", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+
+class CardItem(models.Model):
+    db_table = "shops_card_items"
+
+    card = models.ForeignKey(Card, related_name="products", on_delete=models.CASCADE)
+    item = models.ForeignKey(Product, related_name="products", on_delete=models.CASCADE)

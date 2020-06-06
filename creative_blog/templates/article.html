@@ -1,0 +1,51 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-12" style="margin: 15px 0;">
+                <a href="{% url 'blog' article.author.id %}" class="btn btn-primary">Назад к блогу</a>
+            </div>
+
+            <div class="col-md-8">
+                <div class="content-grid">
+                    <div class="content-grid-head">
+                        <h3>MASTER-CLASS</h3>
+                        <h4>{{ article.created_at }}, Posted by: <a href="{% url 'user' article.author.id %}">{{ article.author.full_name }}</a></h4>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="content-grid-single">
+                        <h3>{{ article.title }}</h3>
+                        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/c696cd68860857.5b6bde69a1299.png" alt="" class="col-12">
+                        <p>{{ article.text }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                 <div class="col-12">
+                     <div class="col-12 col-md-4" style="margin-top: 10px;">
+                         <img src="https://banner2.cleanpng.com/20180401/kve/kisspng-user-profile-computer-icons-male-id-5ac19772b4d884.3909818215226366587408.jpg" alt="Юзер лого" style="height: 25vh; width: 25vh;">
+                     </div>
+                     <p>Автор статьи:</p>
+                     <h3>{{ article.author.first_name }} {{ article.author.last_name }}</h3>
+                     <br>
+                     <p>Биография: <br>
+                         {{ user.bio }}</p>
+                     <br>
+                     <p>Рейтинг: {{ user.rating }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

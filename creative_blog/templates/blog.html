@@ -1,0 +1,45 @@
+{% extends 'base_template.html' %}
+{% load static %}
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin: 30px 0;">
+            <div class="col-12 col-md-4">
+                <img src="https://banner2.cleanpng.com/20180401/kve/kisspng-user-profile-computer-icons-male-id-5ac19772b4d884.3909818215226366587408.jpg" alt="Юзер лого" style="height: 25vh; width: 25vh;">
+            </div>
+            <div class="col-12 col-md-8">
+                <p>Автор блога:</p>
+                <h3>{{ user.full_name }}</h3>
+                <br>
+                <p>{{ user.bio }}</p>
+                <br>
+                <p>Рейтинг: {{ user.rating }}</p>
+            </div>
+        </div>
+        {% for article in articles_dict %}
+            <div class="content-grid">
+                <div class="content-grid-head">
+                    <h3>{{ article.title }}</h3>
+                    <h4>{{ article.created_at }}, Posted by: <a href="{% url 'user' article.author.id %}">{{ article.author.full_name }}</a></h4>
+                <div class="clearfix"></div>
+                </div>
+                <div class="content-grid-info">
+                    <h3><a href="{% url 'article' article.id %}">{{ article.title }}</a></h3>
+                    <p>{{ article.text }}</p>
+                    <img src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/c696cd68860857.5b6bde69a1299.png" alt="" height="400px" width="800px">
+                    <a class="bttn" href="single.html">MORE</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include "pagination/pagination.html" with page=articles %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+    <style>
+		body{
+			padding-top:25px !important;
+		}
+		.stats {
+			text-align:center;
+			text-shadow:1px 1px 0px #fff;
+			margin-top:25px;
+
+		}
+		.stats li{
+			width:125px;
+		}
+		.stats span{
+			font-family:Helvetica;
+			font-weight:bold;
+			text-shadow:1px 1px 0px #fff;
+			font-size:2em;
+
+			display:block;
+			line-height:1em;
+		}
+
+		/* Large desktop */
+		@media (min-width: 1200px) {
+		}
+
+		/* Portrait tablet to landscape and desktop */
+		@media (min-width: 768px) and (max-width: 979px) {
+		}
+
+		/* Landscape phone to portrait tablet */
+		@media (max-width: 767px) {
+			.profile img{
+				width:75px;
+			}
+			.profile h2{
+				font-size:1.7em;
+			}
+			.stats span{
+				font-size: 2em;
+			}
+		}
+
+		/* Landscape phones and down */
+		@media (max-width: 480px) {
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+    <div class="container profile">
+	<div class="row" style=" text-align: right;">
+		<div class="span12">
+			<div class="well well-small clearfix">
+				<div class="row-fluid">
+					<div class="span2">
+						<img src="http://www.gravatar.com/avatar/f6112e781842d6a2b4636b35451401ff?s=125" class="img-polaroid"/>
+					</div>
+					<div class="span2" style="margin-top: 20;">
+						<h2>Название товара</h2>
+					</div>
+					<div class="span8 stats">
+						<ul class="inline stats" style="float:left;">
+							<li style="
+							vertical-align: top;
+							">
+							<button id="plus" type="button" class="icon-plus btn btn-outline-light"></button> <button id="minus" type="button" class="icon-minus btn btn-outline-light"></button>
+						</li>
+
+						<li>
+							<span><cost id="cost">275</cost> грн</span>
+							Цена
+						</li>
+						<li>
+							<span><tag id="count">1</tag> шт </span>
+							Колличество
+						</li>
+						<li>
+							<span><price id="price"></price>  грн</span>
+							Стоимость
+						</li>
+
+						<li style="vertical-align:top;">
+							<span><a style="cursor: pointer; text-decoration: none; " id="15"><i class="icon-trash" style="color:red;"></i> </a></span>
+						</li>
+
+					</ul>
+
+				</div>
+
+				<!--Body content-->
+			</div>
+		</div>
+		<button id="buy" style="margin-right:10px;" type="button" class="btn btn-outline-success">Оформить заказ</button><button type="button" class="btn btn-outline-success">Очистить корзину</button>
+	</div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+		function calc_price() {
+			document.getElementById('price').innerHTML = document.getElementById('count').innerHTML * document.getElementById('cost').innerHTML;
+		}
+
+		document.getElementById('price').innerHTML = document.getElementById('count').innerHTML * document.getElementById('cost').innerHTML;
+
+		document.getElementById('plus').onclick = function() {
+			document.getElementById('count').innerHTML ++;
+			calc_price();
+		}
+
+		document.getElementById('minus').onclick = function() {
+			if (document.getElementById('count').innerHTML >= 2){
+				document.getElementById('count').innerHTML --;
+				calc_price();
+			}
+		}
+    </script>
+{% endblock %}

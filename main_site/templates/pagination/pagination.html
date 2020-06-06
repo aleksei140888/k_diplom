@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-5"></div>
+        <div class="col-2">
+            <div class="pagination text-center">
+                <div class="step-links">
+                    {% if page.has_previous %}
+                      <a href="?page={{ page.previous_page_number }}" class="btn btn-success">Previous</a>
+                    {% endif %}
+                <span class="current text-center" style="font-size: 24px;">
+                    Page {{ page.number }} of {{ page.paginator.num_pages }}.
+                </span>
+                    {% if page.has_next %}
+                        <a href="?page={{ page.next_page_number }}" class="btn btn-success">Next</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-5"></div>
+    </div>
+</div>

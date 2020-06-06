@@ -1,0 +1,199 @@
+{% extends 'base_template.html' %}
+
+{% load static %}
+
+{% block head %}
+
+{% endblock %}
+
+<!-- Подключение блока с основным контентом -->
+{% block content %}
+<div class="container" ng-app="MyApplication" ng-controller="UserProfileController" ng-cloak>
+    <div class="row">
+        <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5)">
+            <p class="text-center" style="margin-top: 30px;">
+                <img src="{% static user.image_url %}" alt="{{ user.full_name }}" height="200px" width="200px" style="border-radius: 200px; border: 1px solid silver;">
+            </p>
+            <p class="text-center">{{ user.full_name }}</p>
+            <div class="list-group" style="margin-bottom: 30px;">
+                <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('profile'); load_profile();">Профиль</a>
+                <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('settings')">Настройки</a>
+                <hr>
+                <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('purchases')">Покупки</a>
+                <hr>
+                <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('blog')">Блог</a>
+                <hr>
+                <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('shop')">Магазин</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="container" ng-show="active_tab === 'profile'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Профиль</h3>
+                <div style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">
+                    <div class="container">
+                        <div class="col-12">
+                            <p>Полное имя: #{ profile_content.full_name }#</p>
+                            <div class="form-group">
+                                <label for="first_name">Имя:</label>
+                                <input type="text" id="first_name" ng-model="profile_content.first_name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="last_name">Фамилия:</label>
+                                <input type="text" id="last_name" ng-model="profile_content.last_name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">E-mail:</label>
+                                <input type="text" id="email" ng-model="profile_content.email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bio_area">Биография: </label>
+                                <br>
+                                <textarea name="bio_area" id="bio_area" cols="40" rows="4" ng-model="profile_content.bio"></textarea>
+                            </div>
+
+                            <div class="btn btn-success">Сохранить</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" ng-show="active_tab === 'settings'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Настройки</h3>
+                <div class="container">
+                    <div class="row" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">
+                        <h4 class="col-12">Восстановление пароля</h4>
+                        <div class="form-group col-12">
+                            <label class="label" for="old_password">Старый пароль<span style="color: red;">*</span></label>
+                            <input id="old_password" type="text" class="form-control" placeholder="Старый пароль" ng-model="settings_block.old_password">
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="label" for="new_password">Новый пароль<span style="color: red;">*</span></label>
+                            <input id="new_password" type="text" class="form-control" placeholder="Новый пароль" ng-model="settings_block.new_password">
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="label" for="confirm_new_password">Подтверждение нового пароля<span style="color: red;">*</span></label>
+                            <input id="confirm_new_password" type="text" class="form-control" placeholder="Подтверждение нового пароля" ng-model="settings_block.confirm_new_password">
+                        </div>
+                        <div class="col-12">
+                            <div class="btn btn-primary" ng-click="change_password_form_submit(settings_block)">Сменить</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" ng-show="active_tab === 'purchases'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Покупки</h3>
+            </div>
+
+            <div class="container" ng-show="active_tab === 'blog'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Блог</h3>
+            </div>
+
+            <div class="container" ng-show="active_tab === 'shop'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Магазин</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Подключение блока с скриптами -->
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    let MyApplication = angular.module('MyApplication',[]);
+
+    MyApplication.config(['$interpolateProvider', function($interpolateProvider) {
+        $interpolateProvider.startSymbol('#{');
+        $interpolateProvider.endSymbol('}#');
+    }]);
+    MyApplication.controller('UserProfileController', ['$scope', 'requestService', function($scope, requestService) {
+        $scope.active_tab = 'profile';
+        $scope.profile_content = {};
+        $scope.settings_block = [];
+
+        $scope.change_active_tab = function(tab) {
+            $scope.active_tab = tab;
+        }
+        $scope.load_profile = function() {
+            requestService.load_profile()
+            .then(function(resp) {
+                if (resp.status === 'success') {
+                    $scope.profile_content = resp.detail;
+                } else {
+
+                }
+            });
+        }
+
+        $scope.load_profile()
+
+        $scope.change_password_form_submit = function (data) {
+            if (!data.old_password || !data.new_password || !data.confirm_new_password) {
+                Swal.fire('Проверьте форму ввода. Вы заполнили не все поля')
+                return false;
+            }
+
+            if (data.old_password.length < 8|| data.new_password.length < 8 || data.confirm_new_password.length < 8) {
+                Swal.fire('Пароли должны содержать 8 или больше символов.')
+                return false;
+            }
+
+            if (data.new_password === data.confirm_new_password) {
+                Swal.fire('Пароли не совпадают.')
+                return false;
+            }
+
+            requestService.change_password(data)
+            .then(function(resp) {
+                if (resp.status === 'status') {
+                    $scope.profile_content = resp.detail;
+                } else {
+                    Swal.fire('Ошибка');
+                }
+            });
+        }
+    }])
+
+    MyApplication.factory('requestService', ['$http',  function($http, $q) {
+        return {
+            load_profile: load_profile,
+            change_password: change_password,
+        };
+
+
+        function change_password(data) {
+            var request = $http({
+                method: 'post',
+                data: JSON.stringify(data),
+                url: '/change_password/'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+        function load_profile() {
+            var request = $http({
+                method: 'get',
+                url: '/load_profile/'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!(angular.isObject(response) && angular.isObject(response.data) && response.data.message)) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return $q.reject(response.data.message);
+        }
+
+    }]);
+</script>
+{% endblock %}
