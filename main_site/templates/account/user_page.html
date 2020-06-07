@@ -10,11 +10,11 @@
 {% block content %}
 <div class="container" ng-app="MyApplication" ng-controller="UserProfileController" ng-cloak>
     <div class="row">
-        <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5)">
+        <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5)">
             <p class="text-center" style="margin-top: 30px;">
                 <img src="{% static user.image_url %}" alt="{{ user.full_name }}" height="200px" width="200px" style="border-radius: 200px; border: 1px solid silver;">
             </p>
-            <p class="text-center">{{ user.full_name }}</p>
+            <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;" m>{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('profile'); load_profile();">Профиль</a>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('settings')">Настройки</a>
@@ -28,11 +28,11 @@
         </div>
         <div class="col-12 col-md-9">
             <div class="container" ng-show="active_tab === 'profile'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Профиль</h3>
-                <div style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">
+                <h3 class="text-center" style="border: 1px solid lightgray;  background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Профиль</h3>
+                <div style="border: 1px solid lightgray; background-color:  rgba(207, 207, 207, 0.5); padding: 10px 0;">
                     <div class="container">
                         <div class="col-12">
-                            <p>Полное имя: #{ profile_content.full_name }#</p>
+                            <p style="margin-bottom: 20px;">Полное имя: #{ profile_content.full_name }#</p>
                             <div class="form-group">
                                 <label for="first_name">Имя:</label>
                                 <input type="text" id="first_name" ng-model="profile_content.first_name">
@@ -61,9 +61,9 @@
             </div>
 
             <div class="container" ng-show="active_tab === 'settings'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Настройки</h3>
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Настройки</h3>
                 <div class="container">
-                    <div class="row" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">
+                    <div class="row" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); padding: 10px 0;">
                         <h4 class="col-12">Восстановление пароля</h4>
                         <div class="form-group col-12">
                             <label class="label" for="old_password">Старый пароль<span style="color: red;">*</span></label>
@@ -85,15 +85,15 @@
             </div>
 
             <div class="container" ng-show="active_tab === 'purchases'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Покупки</h3>
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Покупки</h3>
             </div>
 
             <div class="container" ng-show="active_tab === 'blog'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Блог</h3>
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Блог</h3>
             </div>
 
             <div class="container" ng-show="active_tab === 'shop'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(232,232,232,0.5); padding: 10px 0;">Магазин</h3>
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Магазин</h3>
             </div>
         </div>
     </div>
