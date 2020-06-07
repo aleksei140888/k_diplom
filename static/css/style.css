@@ -41,6 +41,10 @@ height:80px;
 	float: left;
 	margin-top: 1.3em;
 }
+.list{
+    float: right;
+    margin:0 50px;
+}
 .top-menu{
 	float:right;
 }
