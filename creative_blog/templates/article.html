@@ -13,15 +13,15 @@
 
             <div class="col-md-8">
                 <div class="content-grid">
-                    <div class="content-grid-head">
-                        <h3>MASTER-CLASS</h3>
-                        <h4>{{ article.created_at }}, Posted by: <a href="{% url 'user' article.author.id %}">{{ article.author.full_name }}</a></h4>
+                    <div class="content-grid-head" style="background-color: rgba(185, 185, 185, 0.308)">
+                        <h3 style="color: black;">MASTER-CLASS</h3>
+                        <h4>{{ article.created_at }}, Posted by: <a href="{% url 'user' article.author.id %}" style="color: black;">{{ article.author.full_name }}</a></h4>
                         <div class="clearfix"></div>
                     </div>
                     <div class="content-grid-single">
                         <h3 style="text-align: center; color: #000; border: 1px solid lightgray;  background-color: rgba(248, 19, 19, 0.158)">{{ article.title }}</h3>
                         <div style="border: 1px solid lightgray; background-color:  rgba(255, 255, 255, 0.5);">
-                        <p style="text-align: center;"><img src="/static/images/2.jpg" alt="" class="col-12" style="padding: 10px; height: 350px; width: 300px;"></p>
+                        <p style="text-align: center;"><img src="/static/images/2.jpg" alt="" class="col-12" style="padding: 10px; height: 350px; width: 300px; align-self:center;"></p>
                         <p style="color: #000; padding-bottom: 15px; padding-left: 10px; padding-right: 10px;";>{{ article.text }}</p>
                     </div>
                     </div>
@@ -36,7 +36,7 @@
                      <h3 style="margin-top: 20px;">{{ article.author.first_name }} {{ article.author.last_name }}</h3>
                      <br>
                      <p>Биография: <br>
-                         {{ user.bio }}</p>
+                        {{ user.bio }}</p>
                      <br>
                      <p>Рейтинг: {{ user.rating }}</p>
                 </div>

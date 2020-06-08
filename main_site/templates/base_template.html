@@ -24,14 +24,14 @@
     <div style="background: rgb(255, 255, 255);">
         <div class="container">
             <header class="blog-header py-3">
-            <div class="row flex-nowrap justify-content-between align-items-end border-bottom">
+            <div class="row flex-nowrap justify-content-between align-items-top border-bottom">
                 <div class="col-4 pt-1">
 
                 </div>
                 <div class="col-4 text-center" style="height: 225px;">
                     <a class="blog-header-logo text-dark" href="{{ request.get_full_path }}"><img src="{% static "/images/logo (1).png" %}" alt="Logo" width="390" height="221"></a>
                 </div>
-                <div class="col-4 d-flex justify-content-end align-items-end">
+                <div class="col-4 d-flex justify-content-end align-items-start">
                     {% if user.is_authenticated or user.id %}
                         <a class="btn btn-sm btn-outline-danger"
                            href="{% url 'shop_card' user.id %}">Корзина({{ card_products_count }})</a>
@@ -45,9 +45,9 @@
             </div>
         </header>
         <div id="navbar">
-        <ul class="nav justify-content-center" style="padding-bottom: 15px">
+        <ul class="nav justify-content-around" style="padding-bottom: 15px">
             <li class="nav-item">
-              <a class="nav-link active" style="color: gray; font-size: 20px; ;" href="#">Главная</a>
+              <a class="nav-link active" style="color: gray; font-size: 20px; padding-left: 5px;" href="#">Главная</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: gray; font-size: 20px;" href="#">Мастер-классы</a>
@@ -71,13 +71,13 @@
 {% block content %}
 
 {% endblock %}
-<div style="background-color: white; padding-bottom: 50px;">
+<div style="background-color: white; padding-bottom: 25px;">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h3 class="text-center">About Us</h3>
+                <h3 class="text-center" style="padding-top: 10px;">About Us</h3>
                 <div>
-                    <p class="text-center">Apparently we had reached a great height
+                    <p class="text-center" style="padding-top: 10px; padding-bottom: 10px;">Apparently we had reached a great height
                         in the atmosphere, for the sky was a dead black, and the stars had ceased to
                         twinkle. By the same illusion which lifts</p>
                     <img src="https://handmade-shop.cmsmasters.net/wp-content/uploads/2016/12/payment.png"
@@ -85,36 +85,36 @@
                 </div>
             </div>
             <div class="col-12 col-md-6">
-                <h2>Useful Links</h2>
-                <div>
-                    <i class="fa fa-vcard  fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/about-me/" style="font-size: 20px;">About Us</a>
+                <h5 style="text-align: center;">Useful Links</h5>
+                <div style="text-align: center;">
+                    <i class="fa fa-vcard  fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/about-me/" style="font-size: 15px;">About Us</a>
                 </div>
-                <div>
-                    <i class="fa fa-user-circle fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/my-blog/" style="font-size: 20px; padding-left: 6px;">Blog</a>
+                <div style="text-align: center;">
+                    <i class="fa fa-user-circle fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/my-blog/" style="font-size: 15px; padding-left: 6px;">Blog</a>
                 </div>
-                <div>
-                    <i class="fa fa-gift fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/shop-2/" style="font-size: 20px; padding-left: 11px;">Products</a>
-                </div>
-                <div>
-                    <i class="fa fa-id-card fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/contact-us/" style="font-size: 20px;">Contacts</a>
+                <div style="text-align: center;">
+                    <i class="fa fa-gift fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/shop-2/" style="font-size: 15px; padding-left: 11px;">Products</a>
+                </div style="text-align: center;">
+                <div style="text-align: center;">
+                    <i class="fa fa-id-card fa-2x"></i> <a href="https://handmade-shop.cmsmasters.net/contact-us/" style="font-size: 15px;">Contacts</a>
                 </div>
             </div>
             <div class="col-12 col-md-6">
-                <h2>Follow Us</h2>
-                <p>
+                <h5 style="text-align: center;">Follow Us</h5>
+                <p style="text-align: center;">
                     <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> <a
                         href="https://www.facebook.com/profile.php?id=100010265324329"
-                        style="font-size: 24px;">Facebook</a>
+                        style="font-size: 15px;">Facebook</a>
                 </p>
-                <p>
+                <p style="text-align: center;">
                     <i class="fa fa-instagram fa-2x"></i> <a
                         href="https://www.instagram.com/_sweety__peach_/?hl=ru"
-                        style="font-size: 24px;">Instagram</a>
+                        style="font-size: 15px;">Instagram</a>
                 </p>
-                <p>
+                <p style="text-align: center;">
                     <i class="fa fa-pinterest fa-2x"></i> <a
                         href="https://www.pinterest.cl/optimistttt9/"
-                        style="font-size: 24px;">Pinterest</a>
+                        style="font-size: 15px;">Pinterest</a>
                 </p>
                 <div style="clear:both"></div>
             </div>

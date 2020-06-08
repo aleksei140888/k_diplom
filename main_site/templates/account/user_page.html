@@ -9,31 +9,28 @@
 <!-- Подключение блока с основным контентом -->
 {% block content %}
 <div class="container" ng-app="MyApplication" ng-controller="UserProfileController" ng-cloak>
-    <div class="row">
-        <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5)">
+    <div class="row" style="padding-top: 30px; padding-bottom: 30px;">
+        <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); ">
             <p class="text-center" style="margin-top: 30px;">
-                <img src="{% static user.image_url %}" alt="{{ user.full_name }}" height="200px" width="200px" style="border-radius: 200px; border: 1px solid silver;">
+                <img src="{% static user.image_url %}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
             </p>
             <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;" m>{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('profile'); load_profile();">Профиль</a>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('settings')">Настройки</a>
-                <hr>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('purchases')">Покупки</a>
-                <hr>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('blog')">Блог</a>
-                <hr>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('shop')">Магазин</a>
             </div>
         </div>
         <div class="col-12 col-md-9">
             <div class="container" ng-show="active_tab === 'profile'">
                 <h3 class="text-center" style="border: 1px solid lightgray;  background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Профиль</h3>
-                <div style="border: 1px solid lightgray; background-color:  rgba(207, 207, 207, 0.5); padding: 10px 0;">
-                    <div class="container">
+                <div style="border: 1px solid lightgray; background-color:  rgba(207, 207, 207, 0.5); padding: 20px 0;">
+                    <div class="container" style="min-height: 520px;">
                         <div class="col-12">
                             <p style="margin-bottom: 20px;">Полное имя: #{ profile_content.full_name }#</p>
-                            <div class="form-group">
+                            <div class="form-group" >
                                 <label for="first_name">Имя:</label>
                                 <input type="text" id="first_name" ng-model="profile_content.first_name">
                             </div>
@@ -50,8 +47,7 @@
 
                             <div class="form-group">
                                 <label for="bio_area">Биография: </label>
-                                <br>
-                                <textarea name="bio_area" id="bio_area" cols="40" rows="4" ng-model="profile_content.bio"></textarea>
+                                <textarea name="bio_area" id="bio_area" cols="110" rows="4" ng-model="profile_content.bio"></textarea>
                             </div>
 
                             <div class="btn btn-success">Сохранить</div>
@@ -64,7 +60,7 @@
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Настройки</h3>
                 <div class="container">
                     <div class="row" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); padding: 10px 0;">
-                        <h4 class="col-12">Восстановление пароля</h4>
+                        <h4 class="col-12" style="padding-bottom:10px;">Смена пароля</h4>
                         <div class="form-group col-12">
                             <label class="label" for="old_password">Старый пароль<span style="color: red;">*</span></label>
                             <input id="old_password" type="text" class="form-control" placeholder="Старый пароль" ng-model="settings_block.old_password">
