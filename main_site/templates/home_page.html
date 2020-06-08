@@ -38,8 +38,11 @@
 <!-- Подключение блока с основным контентом -->
 {% block content %}
 <div style="min-height: 500px;">
-    <div class="container" style="text-align: center; padding: 60px 0;">
-            <img src="static/images/logo (1).png" alt="{{ product.description }}" height="300px" width="500px" >
+    <div class="container" style="text-align: center; padding: 100px;">
+        <h2 class="w3-wide">THE BAND</h2>
+        <p class="w3-opacity"><i></i></p>
+        <p class="w3-opacity"><i>Made with love</i></p>
+        <p class="w3-justify"> Это уникальный портал мастеров на все руки, который соединил в себе магазин авторских работ, пространство для общения и обмена опытом всех творческих людей, а также стал платформой для открытия и развития собственного бизнеса.</p>
     </div>
 </div>
 <div style="background-image: url('static/images/flat.jpg'); background-size: cover; min-height: 700px;">
@@ -71,7 +74,11 @@
                         <div style="height: 230px; margin-top: 15px;">
                             <img src="{% static product.photo_filename.url %}" alt="{{ product.description }}" height="230px" width="230px">
                         </div>
-                        <p style="font-size: 30px; padding: 10px 0;"><a href="#">{{ product.name }}</a></p>
+                        <p style="font-size: 30px; padding: 10px 0;"><a href="#" style=" overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2; /* number of lines to show */
+                            -webkit-box-orient: vertical;">{{ product.name }}</a></p>
                         <div style="height: 77px;">
                             <p style="overflow: hidden;
                                    text-overflow: ellipsis;
@@ -96,7 +103,11 @@
                 <div class="col-6 col-md-3">
                     <div class="text-center border" style="background: #ffffffec; min-height: 400px; border-radius: 8px; margin-bottom: 25px;">
                         <img src="{% static mc.photo %}" alt="{{ mc.title }}" width="200px" height="250px" style="overflow: hidden; margin-top: 15px;">
-                        <h4 style="padding-top: 5px;"><a href="{% url 'article' mc.id %}">{{ mc.title }}</a></h4>
+                        <h4 style="padding-top: 5px;"><a href="{% url 'article' mc.id %}" style=" overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2; /* number of lines to show */
+                            -webkit-box-orient: vertical;">{{ mc.title }}</a></h4>
                         <div class="col-12" style="padding: 15px; height: 160px;">
                             <p style=" overflow: hidden;
                                        text-overflow: ellipsis;
