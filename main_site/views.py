@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from creative_blog.models import MasterClass
-from creative_shop.models import Shop, Product
+from creative_shop.models import Shop, Product, ProductCategory
 from live_portal import settings
 from live_portal.utils import to_dict_list, MobileResponse, mobile_400, mobile_200
 from main_site.models import User
@@ -48,11 +48,11 @@ def get_card_items_count(request):
 @login_required(login_url='/auth/signin/')
 def user_page(request, user_id):
     user = User.objects.filter(id=user_id).first()
-
+    categories = ProductCategory.objects.all()
     if not user:
         return redirect('home_page')
 
-    return render(request, 'account/user_page.html', context={'user': user.to_dict()})
+    return render(request, 'account/user_page.html', context={'user': user.to_dict(), 'categories': categories})
 
 
 @login_required(login_url='/auth/signin/')
