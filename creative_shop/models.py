@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 from live_portal import settings
 from live_portal.utils import to_dict_list
@@ -103,6 +104,8 @@ class Card(models.Model):
     user = models.ForeignKey(User, related_name="cards", on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, related_name="cards", on_delete=models.CASCADE)
     status = models.ForeignKey(CardStatus, related_name="status", on_delete=models.CASCADE)
+    delivery_method = models.ForeignKey(DeliveryMethod, related_name="delivery_method", on_delete=models.CASCADE, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -113,6 +116,7 @@ class Card(models.Model):
             'shop': self.shop,
             'status': self.status,
             'products': to_dict_list(self.products.all()),
+            'delivery_status': self.delivery_method.name if self.delivery_method else 'Не выбрано'
         }
 
 
@@ -121,12 +125,15 @@ class CardItem(models.Model):
 
     card = models.ForeignKey(Card, related_name="products", on_delete=models.CASCADE)
     item = models.ForeignKey(Product, related_name="products", on_delete=models.CASCADE)
+    count = models.IntegerField(default=1)
 
     def to_dict(self):
         return {
             'id': self.item.id,
             'name': self.item.name,
             'new_price': self.item.new_price,
+            'full_price': self.item.new_price * self.count,
             'photo_filename': self.item.photo_filename,
             'category': self.item.category.name,
+            'count': self.count,
         }

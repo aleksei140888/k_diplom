@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -31,6 +33,16 @@ def home_page(request):
         'card_products_count': request.user.cards.first().products.count() if request.user.is_authenticated and request.user.cards.first() and request.user.cards.first().products.first() else '0'
     }
     return render(request, 'home_page.html', context=context)
+
+
+def get_card_items_count(request):
+    ajax_resp = MobileResponse()
+    ajax_resp.set_response({
+            'card_products_count': request.user.cards.first().products.count() if request.user.is_authenticated and
+                                                                                  request.user.cards.first() and
+                                                                                  request.user.cards.first().products.first() else '0'
+        })
+    return HttpResponse(ajax_resp.return_success())
 
 
 @login_required(login_url='/auth/signin/')

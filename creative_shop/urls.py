@@ -20,6 +20,7 @@ from creative_shop import views
 
 urlpatterns = [
     path('product/<int:product_id>/', views.product, name='product'),
+    path('card/product/add/', views.card_add_item, name='card_add_item'),
     path('card/<int:card_id>/', views.card, name='shop_card'),
     path('<int:shop_id>/', views.shop, name='shop'),
     path('', views.all_shops, name='all_shops'),

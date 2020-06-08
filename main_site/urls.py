@@ -18,6 +18,7 @@ from django.urls import path, include
 from main_site import views
 
 urlpatterns = [
+    path('get_card_items_count/', views.get_card_items_count, name='get_card_items_count'),
     path('user_profile/<int:user_id>/', views.user_page, name='user_page'),
     path('user/<int:user_id>/', views.user, name='user'),
     path('load_profile/', views.load_profile, name='load_profile'),

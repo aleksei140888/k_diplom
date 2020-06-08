@@ -1,62 +1,146 @@
 {% extends 'base_template.html' %}
-
+{% load static %}
 {% block head %}
 
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="card mb-3" style="max-width: 840px;  margin-left: auto;margin-right: auto; margin-top: 50px; ">
-	<div class="row no-gutters">
-		<div class="col-md-4" style="margin-top: auto; margin-bottom: auto;">
-			<img src="https://i.pinimg.com/originals/df/f5/a2/dff5a2162694776874477afd208f49d7.jpg" class="card-img" alt="...">
-		</div>
-		<div class="col-md-8">
-			<div class="card-body">
-
-				<div class="row" style="">
-					<div class="col-12" style="text-align:center;">
-						<h4 style=""><big>{{ product.name }}</big></h4>
-
-
-					</div>
-				</div>
-
-                <hr>
-
-                <div class="row">
-                    <div class="col-6">{{ product.category.name }}</div>
-                    <div class="col-6">Рейтинг ({{ product.rating }} of 5)</div>
+    <div class="container" id="SecondAPP" ng-app="MyApplication" ng-controller="ProductController">
+        <div class="card col-12">
+            <div class="row no-gutters">
+                <div class="col-md-4 text-center" style="overflow: hidden;">
+                    <img src="{% static product.photo_filename.url %}" alt="Product" height="400px;">
                 </div>
-                <hr>
-                <p>Описание:</p>
-				<p>{{ product.description }}</p>
-                <hr>
+                <div class="col-md-8">
+                    <div class="card-body">
 
+                        <div class="row" style="">
+                            <div class="col-12" style="text-align:center;">
+                                <h4 style=""><big>{{ product.name }}</big></h4>
+                            </div>
+                        </div>
 
+                        <hr>
 
-				<h2 class="card-title" style="float:left; margin-left: auto;margin-right: auto;">
-                    <span>Price: {{ product.new_price }}</span>
-                    <small>
-                        <del style="font-size: 15px; color:red; vertical-align:top">
-                            {{ product.old_price}}
-                        </del>
-                    </small>
-                </h2>
-				<div class="row">
-					<div style="margin-left: auto;
-					margin-right: auto;"><button type="button" class="btn btn-outline-success" style="width: 250px;">Купить</button></div>
-				</div>
+                        <div class="row">
+                            <div class="col-6"><span
+                                    class="font-weight-bold">Категория:</span> {{ product.category.name }}</div>
+                            <div class="col-6"><span class="font-weight-bold">Рейтинг:</span> ({{ product.rating }} of
+                                5)
+                            </div>
+                        </div>
+                        <hr>
+                        <p>Описание:</p>
+                        <p>{{ product.description }}</p>
+                        <hr>
+                        <h2 class="card-title">
+                            <span>Price: {{ product.new_price }}</span>
+                            <small>
+                                <del style="font-size: 15px; color:red; vertical-align:top">
+                                    {{ product.old_price }}
+                                </del>
+                            </small>
+                        </h2>
+                        <div class="row">
+                            {% if user.is_authenticated or user.id %}
+                                <div class="col-12 col-md-4">
+                                    <input type="number" ng-model="buy_data.product_count" min="1" value="1"
+                                           ng-change="validateCount()">
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <button type="button" class="btn btn-danger" style="width: 250px;"
+                                            ng-click="add_to_card()">Купить
+                                    </button>
+                                </div>
+                            {% else %}
+                                <div class="col-12 col-md-12">
+                                    <a href="{% url 'auth_page' %}">
+                                        <button type="button" class="btn btn-danger" style="width: 250px;">Войти
+                                        </button>
+                                    </a>
+                                </div>
+                            {% endif %}
 
-			</div>
-		</div>
-	</div>
-</div>
+                            <div class="col-12 col-md-8">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+        let MyApplication = angular.module('MyApplication', []);
 
+        MyApplication.config(['$interpolateProvider', function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('#{');
+            $interpolateProvider.endSymbol('}#');
+        }]);
+
+        MyApplication.config(['$httpProvider', function ($httpProvider) {
+            $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+        }]);
+
+        MyApplication.controller('ProductController', ['$scope', 'requestService', function ($scope, requestService) {
+            $scope.buy_data = {
+                'shop_id': {{ product.shop.id }},
+                'product_id': {{ product.id }},
+                'product_count': 1,
+            };
+            console.log()
+            $scope.validateCount = function () {
+                if ($scope.buy_data.product_count < 1) {
+                    $scope.buy_data.product_count = 1;
+                } else if ($scope.buy_data.product_count > 10) {
+                    $scope.buy_data.product_count = 10;
+                }
+            }
+
+            $scope.add_to_card = function () {
+                requestService.add_to_card_ajax($scope.buy_data)
+                    .then(function (resp) {
+                        if (resp.status === 'success') {
+                            Swal.fire('Товар добавлен')
+                        } else {
+                            Swal.fire(resp.errors)
+                        }
+                    });
+            }
+
+        }])
+
+        MyApplication.factory('requestService', ['$http', function ($http, $q) {
+            return {
+                add_to_card_ajax: add_to_card_ajax,
+            };
+
+            function add_to_card_ajax(data) {
+                let request = $http({
+                    method: 'post',
+                    data: JSON.stringify(data),
+                    url: '{% url 'card_add_item' %}'
+                });
+                return request.then(handleSuccess, handleError);
+            }
+
+            function handleSuccess(response) {
+                return response.data;
+            }
+
+            function handleError(response) {
+                if (!(angular.isObject(response) && angular.isObject(response.data) && response.data.message)) {
+                    return ($q.reject('An unknown error occurred.'));
+                }
+                return $q.reject(response.data.message);
+            }
+
+        }]);
+
+        angular.bootstrap(document.getElementById("SecondAPP"), ['MyApplication']);
     </script>
 {% endblock %}

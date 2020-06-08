@@ -20,7 +20,7 @@
     {% endblock %}
 </head>
 <body>
-<div style="background: rgb(255, 255, 255);">
+<div style="background: rgb(255, 255, 255);" id="BaseApp" ng-app="BaseApp" ng-controller="BaseController">
     <div class="container">
         <header class="blog-header py-3">
             <div class="row flex-nowrap justify-content-between align-items-center border-bottom">
@@ -34,7 +34,7 @@
                 <div class="col-4 d-flex justify-content-end align-items-center">
                     {% if user.is_authenticated or user.id %}
                         <a class="btn btn-sm btn-outline-danger"
-                           href="{% url 'shop_card' user.id %}">Корзина({{ card_products_count }})</a>
+                           href="{% url 'shop_card' user.id %}">Корзина(#{ get_card_items_count }#)</a>
                         <a class="btn btn-sm btn-outline-danger" href="{% url 'user_page' user.id %}">Профиль</a>
                         <a class="btn btn-sm btn-outline-danger" href="{% url 'auth_signout' %}">Выйти</a>
                     {% else %}
@@ -110,9 +110,65 @@
     </div>
 </div>
 <!-- Подключение блока с скриптами -->
+    <script>
+    let BaseApp = angular.module('BaseApp',[]);
+
+    BaseApp.config(['$interpolateProvider', function($interpolateProvider) {
+        $interpolateProvider.startSymbol('#{');
+        $interpolateProvider.endSymbol('}#');
+    }]);
+
+    BaseApp.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    }]);
+
+    BaseApp.controller('BaseController', ['$scope', 'requestService', function($scope, requestService) {
+        $scope.get_card_items_count = '0';
+
+
+        $scope.get_items_count = function () {
+            requestService.get_items_count_ajax($scope.buy_data)
+            .then(function(resp) {
+                if (resp.status === 'success') {
+                    $scope.get_card_items_count = resp.detail.card_products_count
+                } else {
+                    console.log('Ошибка при загрузке количества товаров в корзине')
+                }
+            });
+        }
+
+        $scope.get_items_count();
+    }])
+
+    BaseApp.factory('requestService', ['$http',  function($http, $q) {
+        return {
+            get_items_count_ajax: get_items_count_ajax,
+        };
+
+        function get_items_count_ajax(data) {
+            let request = $http({
+                method: 'post',
+                url: '{% url 'get_card_items_count' %}'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!(angular.isObject(response) && angular.isObject(response.data) && response.data.message)) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return $q.reject(response.data.message);
+        }
+
+    }]);
+</script>
 {% block scripts %}
 
 {% endblock %}
-
 </body>
 </html>

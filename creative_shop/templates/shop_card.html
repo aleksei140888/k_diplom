@@ -6,27 +6,124 @@
 
 {% block content %}
     <div class="container">
-        <div class="col-12 col-md-4">
-            <div>
-                {{ card.status }}
+        <div class="row">
+            <div class="col-12 col-md-12" style="padding-top: 20px;">
+                <div class="row">
+                    <div class="col-12 col-md-12"><h2 class="text-center">Корзина</h2></div>
+                    <br><br>
+                    <br><br>
+                    <div class="col-12 col-md-4">Название</div>
+                    <div class="col-12 col-md-2">Цена</div>
+                    <div class="col-12 col-md-2">Количество</div>
+                    <div class="col-12 col-md-2">Общая цена</div>
+                    <div class="col-12 col-md-2">Управление</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-12">
+                {% for product in card.products %}
+                    <div class="row" ng-repeat="">
+                        <div class="col-12 col-md-4">
+                            {{ product.name }}
+                        </div>
+                        <div class="col-12 col-md-2">{{ product.new_price }}грн.</div>
+                        <div class="col-12 col-md-2">{{ product.count }}</div>
+                        <div class="col-12 col-md-2">{{ product.full_price }}</div>
+                        <div class="col-12 col-md-2"><button ng-click="deleteItem('{{ product.id }}')" class="btn btn-danger"><i class="fa fa-trash"></i></button></div>
+                    </div>
+                {% endfor %}
 
             </div>
-            <div class="row" style="margin-left: auto;margin-right: auto; margin-bottom: 20px;">
-					<p style="margin-top: auto; margin-bottom: auto; margin-right: 30px;">Метод доставки: </p>
-					<div class="btn-group" data-toggle="buttons">
-						{% for method in delivery_methods %}
+            <br><br>
+            <br><br>
+            <div class="col-12 col-md-12">
+                <div class="row" style="margin-left: auto;margin-right: auto; margin-bottom: 20px;">
+                    <p style="margin-top: auto; margin-bottom: auto; margin-right: 30px;">Метод доставки: </p>
+                    <div class="btn-group" data-toggle="buttons">
+                        {% for method in delivery_methods %}
                             <label class="btn btn-outline-secondary">
-                                <input type="radio" name="method_dev" id="{{ method.slug }}"> {{ method.name }} ({{ method.price }}грн.)
+                                <input type="radio" name="method_dev" id="{{ method.delivery_method.slug }}"> {{ method.delivery_method.name }} ({{ method.delivery_method.price }}грн.)
                             </label>
-						{% endfor %}
-					</div>
-				</div>
+                        {% endfor %}
+                    </div>
+                </div>
+           </div>
+            <div class="col-12">
+                <h2>Общая сумма: {{ price_sum }}</h2>
+                <button class="btn btn-success">Оформить заказ</button>
+            </div>
+            <br><br><br><br><br>
         </div>
+
     </div>
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+    let MyApplication = angular.module('MyApplication',[]);
 
-    </script>
+    MyApplication.config(['$interpolateProvider', function($interpolateProvider) {
+        $interpolateProvider.startSymbol('#{');
+        $interpolateProvider.endSymbol('}#');
+    }]);
+    MyApplication.controller('UserProfileController', ['$scope', 'requestService', function($scope, requestService) {
+        $scope.method_dev = '';
+        $scope.deleteItem = function(id){
+            requestService.delete_item({'id': id})
+            .then(function(resp) {
+                if (resp.status === 'status') {
+                    $scope.profile_content = resp.detail;
+                } else {
+                    Swal.fire('Ошибка');
+                }
+            });
+        }
+
+        $scope.change_password_form_submit = function (data) {
+            if (!data.old_password || !data.new_password || !data.confirm_new_password) {
+                Swal.fire('Проверьте форму ввода. Вы заполнили не все поля')
+                return false;
+            }
+
+            requestService.change_password(data)
+            .then(function(resp) {
+                if (resp.status === 'status') {
+                    $scope.profile_content = resp.detail;
+                } else {
+                    Swal.fire('Ошибка');
+                }
+            });
+        }
+    }])
+
+    MyApplication.factory('requestService', ['$http',  function($http, $q) {
+        return {
+            delete_item: delete_item,
+        };
+
+
+        function delete_item(data) {
+            var request = $http({
+                method: 'post',
+                data: JSON.stringify(data),
+                url: '/change_password/'
+            });
+            return request.then(handleSuccess, handleError);
+        }
+
+
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!(angular.isObject(response) && angular.isObject(response.data) && response.data.message)) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return $q.reject(response.data.message);
+        }
+
+    }]);
+</script>
 {% endblock %}
