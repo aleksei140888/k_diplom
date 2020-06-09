@@ -46,13 +46,13 @@
         <div id="navbar">
         <ul class="nav justify-content-around" style="padding-bottom: 15px">
             <li class="nav-item">
-              <a class="nav-link active" style="color: gray; font-size: 20px; padding-left: 5px;" href="#">Главная</a>
+              <a class="nav-link active" style="color: gray; font-size: 20px; padding-left: 5px;" href="{% url 'home_page' %}">Главная</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: gray; font-size: 20px;" href="#">Мастер-классы</a>
+              <a class="nav-link" style="color: gray; font-size: 20px;" href="{% url 'all_blogs' %}">Мастер-классы</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: gray; font-size: 20px;" href="#">Магазины</a>
+              <a class="nav-link" style="color: gray; font-size: 20px;" href="{% url 'all_shops' %}">Магазины</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: gray; font-size: 20px;" href="#">Пользователи</a>
