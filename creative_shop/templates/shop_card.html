@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" id="ShopCard" ng-app="MyApplication" ng-controller="ShopCardController">
         <div class="row">
             <div class="col-12 col-md-12" style="padding-top: 20px;">
                 <div class="row">
@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 col-md-12">
                 {% for product in card.products %}
-                    <div class="row" ng-repeat="">
+                    <div class="row" style="margin-top: 10px;">
                         <div class="col-12 col-md-4">
                             {{ product.name }}
                         </div>
@@ -41,15 +41,22 @@
                     <div class="btn-group" data-toggle="buttons">
                         {% for method in delivery_methods %}
                             <label class="btn btn-outline-secondary">
-                                <input type="radio" name="method_dev" id="{{ method.delivery_method.slug }}"> {{ method.delivery_method.name }} ({{ method.delivery_method.price }}грн.)
+                                <input
+                                        type="radio"
+                                        name="method_dev"
+                                        value="{{ method.delivery_method.price }}"
+                                        ng-model="method_dev"
+                                        ng-change="calculate_amount()"
+                                        id="{{ method.delivery_method.slug }}"> {{ method.delivery_method.name }} ({{ method.delivery_method.price }}грн.)
                             </label>
                         {% endfor %}
                     </div>
                 </div>
            </div>
             <div class="col-12">
-                <h2>Общая сумма: {{ price_sum }}</h2>
-                <button class="btn btn-success">Оформить заказ</button>
+                <h2>Общая сумма: #{ total_amount }#,00</h2>
+                <br>
+                <button class="btn btn-lg btn-success" ng-click="payment_make()">Оформить заказ</button>
             </div>
             <br><br><br><br><br>
         </div>
@@ -66,12 +73,37 @@
         $interpolateProvider.startSymbol('#{');
         $interpolateProvider.endSymbol('}#');
     }]);
-    MyApplication.controller('UserProfileController', ['$scope', 'requestService', function($scope, requestService) {
-        $scope.method_dev = '';
+
+    MyApplication.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    }]);
+
+    MyApplication.controller('ShopCardController', ['$scope', 'requestService', function($scope, requestService) {
+        $scope.method_dev = ''
+        $scope.products_amount = parseFloat('{{ card.total_amount }}')
+        $scope.total_amount = parseFloat('{{ card.total_amount }}')
+        $scope.products = []
+
+        $scope.calculate_amount = function(){
+            $scope.total_amount = parseFloat($scope.products_amount) + parseFloat($scope.method_dev)
+        }
+
+        $scope.payment_make = function(){
+            requestService.payment_make($scope.method_dev)
+            .then(function(resp) {
+                if (resp.status === 'success') {
+                    window.open(resp.detail, '_blank');
+                } else {
+                    Swal.fire('Ошибка');
+                }
+            });
+        }
+
         $scope.deleteItem = function(id){
             requestService.delete_item({'id': id})
             .then(function(resp) {
-                if (resp.status === 'status') {
+                if (resp.status === 'success') {
                     $scope.profile_content = resp.detail;
                 } else {
                     Swal.fire('Ошибка');
@@ -98,9 +130,19 @@
 
     MyApplication.factory('requestService', ['$http',  function($http, $q) {
         return {
+            payment_make: payment_make,
             delete_item: delete_item,
         };
 
+
+        function payment_make(delivery_method) {
+            var request = $http({
+                method: 'post',
+                data: JSON.stringify({'delivery_method': delivery_method}),
+                url: '{% url 'payment_make' %}'
+            });
+            return request.then(handleSuccess, handleError);
+        }
 
         function delete_item(data) {
             var request = $http({
@@ -125,5 +167,7 @@
         }
 
     }]);
+
+    angular.bootstrap(document.getElementById("ShopCard"), ['MyApplication']);
 </script>
 {% endblock %}

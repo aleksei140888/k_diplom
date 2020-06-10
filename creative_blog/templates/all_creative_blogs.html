@@ -1,12 +1,44 @@
 {% extends 'base_template.html' %}
-
+{% load static %}
 {% block head %}
 
 {% endblock %}
 
 {% block content %}
     <div class="container">
+        <div class="row">
+            <div class="col-12"><h2 class="text-center" style="font-weight: bold; margin: 30px 0;">Мастер-классы</h2></div>
+            {% for mc in mcs %}
+            <div class="col-12" style="height: 250px;">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <div class="text-center align-content-center" style="height: 250px; width: 100%; overflow: hidden; padding: 10px;">
+                            <div class="" style="width: 95%;
+                                                height: 240px;
+                                                margin:0 auto;
+                                                background:url({% static mc.photo %}) #fff1ed no-repeat center center;
+                                                background-size:240px;
+                                                display: block;">
 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <h3 style=" overflow: hidden;
+                                       text-overflow: ellipsis;
+                                       display: -webkit-box;
+                                       -webkit-line-clamp: 1; /* number of lines to show */
+                                       -webkit-box-orient: vertical;"><a href="{% url 'article' mc.id %}">{{ mc.title }}</a></h3>
+                        <h5 style=" overflow: hidden;
+                                       text-overflow: ellipsis;
+                                       display: -webkit-box;
+                                       -webkit-line-clamp: 8; /* number of lines to show */
+                                       -webkit-box-orient: vertical;">{{ mc.text }}</h5>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 

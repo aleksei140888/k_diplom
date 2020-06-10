@@ -51,7 +51,11 @@
             {% for shop in shops %}
                 <div class="col-12 col-md-3">
                     <div class="text-center border-left" style="background: #fffffffb; height: 300px; border-radius: 8px; margin-bottom: 25px;">
-                        <p style="font-size: 30px; padding: 15px 0;"><a href="#">{{ shop.name }}</a></p>
+                        <p style="font-size: 30px; padding: 15px 0;"><a href="#" style=" overflow: hidden;
+                                       text-overflow: ellipsis;
+                                       display: -webkit-box;
+                                       -webkit-line-clamp: 1; /* number of lines to show */
+                                       -webkit-box-orient: vertical;">{{ shop.name }}</a></p>
                         <p style="height: 100px;">{{ shop.description }}</p>
                         <p style="height: 20px;">Рейтинг: {{ shop.rating }}</p>
                         <hr>

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'corsheaders',
     'main_site',
     'creative_blog',
     'creative_shop',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'live_portal.urls'
@@ -137,3 +139,4 @@ AUTH_USER_MODEL = 'main_site.User'
 MERCHANT_ID = 1448773
 MERCHANT_SECRET_KEY = 'BvqB0Me2S7i6BCHDoBVuLmviqX8T707a'
 
+CORS_ORIGIN_ALLOW_ALL = True

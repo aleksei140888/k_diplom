@@ -2,24 +2,25 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from creative_blog.models import MasterClass
+from live_portal.utils import to_dict_list
 from main_site.models import User
 
 
 def all_blogs(request):
-    blog_objects = User.objects.all().prefetch_related("master_classes")
+    blog_objects = MasterClass.objects.all()
     paginator = Paginator(blog_objects, 10)
     page = request.GET.get('page')
 
     try:
-        blogs = paginator.page(page)
+        mcs = paginator.page(page)
     except PageNotAnInteger:
         # Если страница не является целым числом, поставим первую страницу
-        blogs = paginator.page(1)
+        mcs = paginator.page(1)
     except EmptyPage:
         # Если страница больше максимальной, доставить последнюю страницу результатов
-        blogs = paginator.page(paginator.num_pages)
+        mcs = paginator.page(paginator.num_pages)
 
-    render(request, 'all_creative_blogs.html', context={'page': page, 'blogs': blogs})
+    return render(request, 'all_creative_blogs.html', context={'page': page, 'mcs': to_dict_list(mcs)})
 
 
 def blog(request, user_id):

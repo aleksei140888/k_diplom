@@ -107,8 +107,13 @@ def card_add_item(request):
 
 
 def payment_make(request):
+    resp = MobileResponse()
 
-    amount = request.user.cards.filter(status_id=1).first().get_amount()
+    data = json.loads(request.body.decode('utf-8'))
+
+    card_obj = request.user.cards.filter(status_id=1).first()
+    card_obj.delivery_method = DeliveryMethod.objects.filter(price=int(data['delivery_method'].split(',')[0])).first()
+    amount = card_obj.get_amount()
 
     api = Api(merchant_id=settings.MERCHANT_ID,
               secret_key=settings.MERCHANT_SECRET_KEY)
@@ -117,14 +122,24 @@ def payment_make(request):
 
     data = {
         "currency": "UAH",
-        "amount": 10000
+        "amount": int(amount*100)
     }
 
     url = checkout.url(data).get('checkout_url')
+    resp.set_response(url)
 
-    return redirect(url)
+    return HttpResponse(resp.return_success())
 
 
-def payment_check(request):
-    pass
+def success_payment(request):
 
+    card = request.user.cards.filter(status_id=1).first()
+    card.status_id = 2
+    card.save()
+
+    return render(request, 'success_payment.html')
+
+
+def error_payment(request):
+
+    return render(request, 'error_payment.html')

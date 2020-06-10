@@ -116,18 +116,18 @@ class Card(models.Model):
             'shop': self.shop,
             'status': self.status,
             'products': to_dict_list(self.products.all()),
-            'delivery_status': self.delivery_method.name if self.delivery_method else 'Не выбрано'
+            'total_amount': self.get_amount(),
+            'delivery_status': self.delivery_method.name if self.delivery_method else 'Не выбрано',
         }
 
     def get_amount(self):
         amount = 0
 
         for product in self.products.all():
-            amount += product.item.new_price
+            amount += product.item.new_price * product.count
 
         if self.delivery_method:
             amount += self.delivery_method.price
-
         return amount
 
 

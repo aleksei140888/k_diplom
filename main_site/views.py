@@ -38,9 +38,9 @@ def home_page(request):
 def get_card_items_count(request):
     ajax_resp = MobileResponse()
     ajax_resp.set_response({
-            'card_products_count': request.user.cards.first().products.count() if request.user.is_authenticated and
-                                                                                  request.user.cards.first() and
-                                                                                  request.user.cards.first().products.first() else '0'
+            'card_products_count': request.user.cards.filter(status_id=1).first().products.count() if request.user.is_authenticated and
+                                                                                  request.user.cards.filter(status_id=1).first() and
+                                                                                  request.user.cards.filter(status_id=1).first().products.first() else '0'
         })
     return HttpResponse(ajax_resp.return_success())
 
