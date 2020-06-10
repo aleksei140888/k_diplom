@@ -132,3 +132,8 @@ MEDIA_ROOT = '/media/'
 
 AUTH_USER_MODEL = 'main_site.User'
 
+
+# Данные для платежной системы
+MERCHANT_ID = 1448773
+MERCHANT_SECRET_KEY = 'BvqB0Me2S7i6BCHDoBVuLmviqX8T707a'
+

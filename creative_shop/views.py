@@ -6,8 +6,10 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from creative_shop.models import Shop, Product, DeliveryMethod, Card, CardItem, ActiveDeliveryMethods
+from live_portal import settings
 from live_portal.utils import to_dict_list, MobileResponse
 from main_site.models import User
+from cloudipsp import Api, Checkout
 
 
 def all_shops(request):
@@ -38,6 +40,18 @@ def shop(request, shop_id):
     return render(request, 'shop_shop.html', context={'shop': shop_obj, 'products': products})
 
 
+def make_shop(request):
+    resp = MobileResponse()
+    if request.user.shops.first():
+        return redirect('home_page')
+
+    data = json.loads(request.body.decode('utf-8'))
+
+    Shop.objects.create(name=data['name'], description=data['description'], rating=5, owner_id=request.user.id)
+
+    return HttpResponse(resp.return_success())
+
+
 def product(request, product_id):
     product_obj = Product.objects.filter(id=product_id).first()
     delivery_methods = DeliveryMethod.objects.all()
@@ -51,15 +65,19 @@ def product(request, product_id):
 def card(request, card_id):
 
     card_obj = Card.objects.filter(id=card_id).filter(status_id=1).first()
-    active_methods = ActiveDeliveryMethods.objects.filter(shop_id=card_obj.shop.id).all()
+
     if not card_obj:
         return redirect('home_page')
 
-    sum = 0
-    for card_item in card_obj.products.all():
-        sum += card_item.item.new_price
+    active_methods = ActiveDeliveryMethods.objects.filter(shop_id=card_obj.shop.id).all()
 
-    return render(request, 'shop_card.html', context={'card': card_obj.to_dict(), 'delivery_methods': active_methods, 'price_sum': sum})
+    context = {
+        'card': card_obj.to_dict(),
+        'delivery_methods': active_methods,
+        'price_sum': card_obj.get_amount,
+    }
+
+    return render(request, 'shop_card.html', context=context)
 
 
 def card_add_item(request):
@@ -86,3 +104,27 @@ def card_add_item(request):
         item.save()
 
     return HttpResponse(resp.return_success())
+
+
+def payment_make(request):
+
+    amount = request.user.cards.filter(status_id=1).first().get_amount()
+
+    api = Api(merchant_id=settings.MERCHANT_ID,
+              secret_key=settings.MERCHANT_SECRET_KEY)
+
+    checkout = Checkout(api=api)
+
+    data = {
+        "currency": "UAH",
+        "amount": 10000
+    }
+
+    url = checkout.url(data).get('checkout_url')
+
+    return redirect(url)
+
+
+def payment_check(request):
+    pass
+

@@ -25,6 +25,7 @@
             </div>
         </div>
         <div class="col-12 col-md-9">
+            <!-- Блок профиля -->
             <div class="container" ng-show="active_tab === 'profile'">
                 <h3 class="text-center" style="border: 1px solid lightgray;  background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Профиль</h3>
                 <div style="border: 1px solid lightgray; background-color:  rgba(207, 207, 207, 0.5); padding: 20px 0;">
@@ -57,6 +58,7 @@
                 </div>
             </div>
 
+            <!-- Блок настроек -->
             <div class="container" ng-show="active_tab === 'settings'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Настройки</h3>
                 <div class="container">
@@ -81,10 +83,13 @@
                 </div>
             </div>
 
+            <!-- Блок Покупок -->
             <div class="container" ng-show="active_tab === 'purchases'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Покупки</h3>
             </div>
 
+
+            <!-- Блок Магазина -->
             <div class="container" ng-show="active_tab === 'blog'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Блог</h3>
                 <div class="row">
@@ -121,11 +126,25 @@
             </div>
 
 
+            <!-- Блок магазина -->
             <div class="container" ng-show="active_tab === 'shop'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Магазин</h3>
                 <div class="row">
                     <div class="col-12">
-                        <button class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                        <button ng-if="shop_exist" class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                        <div class="row" ng-if="!shop_exist">
+                            <div class="form-group col-12">
+                                <label class="label" for="title">Название<span style="color: red;">*</span></label>
+                                <input id="title" type="text" class="form-control" placeholder="Хендмейд" required ng-model="new_shop.name">
+                            </div>
+                            <div class="form-group col-12">
+                                <label class="label" for="title">Описание<span style="color: red;">*</span></label>
+                                <input id="title" type="text" class="form-control" placeholder="Мой прекрастный магазин" required ng-model="new_shop.description">
+                            </div>
+                            <div class="col-12">
+                                <div class="btn btn-primary" ng-click="make_shop(new_shop)">Создать</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,19 +154,19 @@
                 <div class="row">
                     <div class="form-group col-12">
                         <label class="label" for="title">Название<span style="color: red;">*</span></label>
-                        <input id="title" type="text" class="form-control" placeholder="Заголовок" ng-model="article_new.title">
+                        <input id="title" type="text" class="form-control" placeholder="Заголовок" ng-model="new_product.name">
                     </div>
                     <div class="form-group col-12">
                         <label class="label" for="mc_text">Описание<span style="color: red;">*</span></label>
-                        <textarea id="mc_text" type="text" class="form-control" placeholder="Текст" rows="10" ng-model="article_new.text"></textarea>
+                        <textarea id="mc_text" type="text" class="form-control" placeholder="Текст" rows="10" ng-model="new_product.description"></textarea>
                     </div>
                     <div class="form-group col-12">
                         <label class="label" for="photo_file">Цена<span style="color: red;">*</span></label>
-                        <input id="photo_file" type="text" class="form-control" placeholder="0.00" ng-model="article_new.photo">
+                        <input id="photo_file" type="text" class="form-control" placeholder="0.00" ng-model="new_product.new_price">
                     </div>
                     <div class="form-group col-12">
                         <label class="label" for="category">Категория<span style="color: red;">*</span></label>
-                        <select id="category" ng-model="product_category">
+                        <select id="category" ng-model="new_product.category_id">
                             {% for category in categories %}
                                 <option value="{{ category.id }}">{{ category.name }}</option>
                             {% endfor %}
@@ -155,15 +174,16 @@
                     </div>
                     <div class="form-group col-12">
                         <label class="label" for="video_file">Фото</label>
-                        <input id="video_file" type="file" class="form-control" placeholder="Фото" ng-model="article_new.video">
+                        <input id="video_file" type="file" class="form-control" placeholder="Фото" ng-model="new_product.photo">
                     </div>
                     <div class="col-12">
                         <div class="btn btn-primary" ng-click="change_password_form_submit(settings_block)">Добавить</div>
                     </div>
                 </div>
+
             </div>
 
-
+            <!-- Блок форума -->
             <div class="container" ng-show="active_tab === 'forum'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Форум</h3>
                 <div class="row">
@@ -243,12 +263,39 @@
         $interpolateProvider.startSymbol('#{');
         $interpolateProvider.endSymbol('}#');
     }]);
+
+    MyApplication.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    }]);
+
     MyApplication.controller('UserProfileController', ['$scope', 'requestService', function($scope, requestService) {
         $scope.active_tab = 'profile';
+
         $scope.profile_content = {};
         $scope.settings_block = [];
         $scope.articles = []
+
         $scope.product_category = 1;
+
+        $scope.shop_exist = {{ shop_exist }};
+        $scope.new_shop = {};
+        $scope.new_product = {};
+
+
+
+        $scope.make_shop = function(data) {
+            requestService.make_shop(data)
+            .then(function(resp) {
+                if (resp.status === 'success') {
+                    Swal.fire('Магазин успешно создан')
+                    $scope.shop_exist = 1;
+                } else {
+                    Swal.fire('Произошла ошибка')
+                }
+            });
+        }
+
 
         $scope.change_active_tab = function(tab) {
             $scope.active_tab = tab;
@@ -295,10 +342,20 @@
 
     MyApplication.factory('requestService', ['$http',  function($http, $q) {
         return {
+            make_shop: make_shop,
             load_profile: load_profile,
             change_password: change_password,
         };
 
+
+        function make_shop(data) {
+            var request = $http({
+                method: 'post',
+                data: JSON.stringify(data),
+                url: '{% url 'make_shop' %}'
+            });
+            return request.then(handleSuccess, handleError);
+        }
 
         function change_password(data) {
             var request = $http({

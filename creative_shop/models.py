@@ -119,6 +119,17 @@ class Card(models.Model):
             'delivery_status': self.delivery_method.name if self.delivery_method else 'Не выбрано'
         }
 
+    def get_amount(self):
+        amount = 0
+
+        for product in self.products.all():
+            amount += product.item.new_price
+
+        if self.delivery_method:
+            amount += self.delivery_method.price
+
+        return amount
+
 
 class CardItem(models.Model):
     db_table = "shops_card_items"

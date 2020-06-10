@@ -52,7 +52,13 @@ def user_page(request, user_id):
     if not user:
         return redirect('home_page')
 
-    return render(request, 'account/user_page.html', context={'user': user.to_dict(), 'categories': categories})
+    context = {
+        'user': user.to_dict(),
+        'categories': categories,
+        'shop_exist': 1 if user.shops.first() else 0,
+    }
+
+    return render(request, 'account/user_page.html', context=context)
 
 
 @login_required(login_url='/auth/signin/')
