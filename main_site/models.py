@@ -13,6 +13,8 @@ class User(AbstractUser):
     rating = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     forum_nickname = models.CharField(max_length=75, default="user_nickname")
     bio = models.TextField(max_length=2048, blank=True)
+    phone_number = models.CharField(max_length=15, null=True)
+    phone_number_verify_code = models.CharField(max_length=4, null=True)
 
     photo = models.ImageField(upload_to="user_images", blank=True)
 

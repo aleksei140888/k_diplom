@@ -105,6 +105,7 @@ class Card(models.Model):
     shop = models.ForeignKey(Shop, related_name="cards", on_delete=models.CASCADE)
     status = models.ForeignKey(CardStatus, related_name="status", on_delete=models.CASCADE)
     delivery_method = models.ForeignKey(DeliveryMethod, related_name="delivery_method", on_delete=models.CASCADE, null=True)
+    payed = models.BooleanField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
