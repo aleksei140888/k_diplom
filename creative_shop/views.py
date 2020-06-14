@@ -1,4 +1,6 @@
 import json
+import time
+from hashlib import md5
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
@@ -63,8 +65,8 @@ def product(request, product_id):
 
 
 def card(request, card_id):
-
-    card_obj = Card.objects.filter(id=card_id).filter(status_id=1).first()
+    print(card_id)
+    card_obj = Card.objects.filter(user_id=card_id).filter(status_id=1).first()
 
     if not card_obj:
         return redirect('home_page')
@@ -80,30 +82,40 @@ def card(request, card_id):
     return render(request, 'shop_card.html', context=context)
 
 
-def card_add_item(request):
+def card_item(request):
     resp = MobileResponse()
-    data = json.loads(request.body.decode('utf-8'))
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
 
-    fields = ['shop_id', 'product_id', 'product_count']
-    for field in fields:
-        if field not in data:
-            resp.add_error('form/fields', f'В запросе отсутвует поле - {field}')
+        fields = ['shop_id', 'product_id', 'product_count']
+        for field in fields:
+            if field not in data:
+                resp.add_error('form/fields', f'В запросе отсутвует поле - {field}')
 
-    if len(resp.raw['errors']):
-        return resp.return_error()
+        if len(resp.raw['errors']):
+            return resp.return_error()
 
-    card = Card.objects.filter(user_id=request.user.id, shop_id=data['shop_id'], status_id=1).first()
-    if not card:
-        card = Card.objects.create(user_id=request.user.id, shop_id=data['shop_id'], status_id=1)
+        card = Card.objects.filter(user_id=request.user.id, shop_id=data['shop_id'], status_id=1).first()
+        if not card:
+            card = Card.objects.create(user_id=request.user.id, shop_id=data['shop_id'], status_id=1)
 
-    item = CardItem.objects.filter(card_id=card.id, item_id=data['product_id']).first()
-    if not item:
-        item = CardItem.objects.create(card_id=card.id, item_id=data['product_id'], count=data['product_count'])
-    else:
-        item.count += int(data['product_count'])
-        item.save()
+        item = CardItem.objects.filter(card_id=card.id, item_id=data['product_id']).first()
+        if not item:
+            item = CardItem.objects.create(card_id=card.id, item_id=data['product_id'], count=data['product_count'])
+        else:
+            item.count += int(data['product_count'])
+            item.save()
 
-    return HttpResponse(resp.return_success())
+        return HttpResponse(resp.return_success())
+    elif request.method == "DELETE":
+        data = json.loads(request.body.decode('utf-8'))
+
+        item = CardItem.objects.get(id=data['card_item_id'])
+        item.delete()
+
+        resp.set_response('Товар успешно удален.')
+
+        return HttpResponse(resp.return_success())
 
 
 def payment_make(request):
@@ -120,7 +132,10 @@ def payment_make(request):
 
     checkout = Checkout(api=api)
 
+    order_str = f"{request.user.username}_{time.time()}"
+
     data = {
+        "order_id": order_str,
         "currency": "UAH",
         "amount": int(amount*100)
     }

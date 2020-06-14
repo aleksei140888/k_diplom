@@ -1,0 +1,62 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Дата', 'Посещения'],
+          ['20/04/2020',  1000],
+          ['21/04/2020',  1170],
+          ['22/04/2020',  660],
+          ['23/04/2020',  1030]
+        ]);
+
+        var options = {
+          title: 'График посещений',
+          hAxis: {title: 'Дата',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0},
+          height:500,
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-12 col-md-12">
+            <h1 class="text-center" style="margin: 35px 0;">График посещений пользователей</h1>
+        </div>
+        <div class="col-12">
+            <div>
+                <h4>Диапазон статистики</h4>
+                <br>
+                <label for="from_date">
+                    От:
+                    <input id="from_date" type="date">
+                </label>
+
+                <label for="to_date">
+                    До:
+                    <input id="to_date" type="date">
+                </label>
+                    <button class="btn btn-primary">Применить</button>
+            </div>
+            <hr>
+            <!--Div that will hold the pie chart-->
+            <div id="chart_div"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

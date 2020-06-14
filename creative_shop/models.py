@@ -106,6 +106,7 @@ class Card(models.Model):
     status = models.ForeignKey(CardStatus, related_name="status", on_delete=models.CASCADE)
     delivery_method = models.ForeignKey(DeliveryMethod, related_name="delivery_method", on_delete=models.CASCADE, null=True)
     payed = models.BooleanField(default=0)
+    order_id = models.CharField(max_length=255, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)

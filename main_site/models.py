@@ -30,6 +30,7 @@ class User(AbstractUser):
             "full_name": self.first_name + " " + self.last_name,
             "email": self.email,
             "bio": self.bio,
+            "is_superuser": self.is_superuser,
             "rating": str(self.rating),
             "shop_name": shop.name if shop else '',
             "image_url": self.photo.url if self.photo else 'https://banner2.cleanpng.com/20180401/kve/kisspng-user-'

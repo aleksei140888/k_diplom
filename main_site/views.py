@@ -130,3 +130,12 @@ def auth_sign(request):
 def auth_signout(request):
     logout(request)
     return redirect('home_page')
+
+
+def get_statistic(request):
+    if request.method == "GET":
+        return render(request, "account/admin/statistic.html")
+    elif request.method == "POST":
+        pass
+    else:
+        pass

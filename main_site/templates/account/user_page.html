@@ -3,7 +3,49 @@
 {% load static %}
 
 {% block head %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Дата', 'Посещения'],
+          ['20/04/2020',  1000],
+          ['21/04/2020',  1170],
+          ['22/04/2020',  660],
+          ['23/04/2020',  1030]
+        ]);
+
+        var options = {
+          title: 'График посещений',
+          hAxis: {title: 'Дата',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0},
+          width: 765,
+          height: 500,
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+
+        function drawChart() {
+          var jsonData = $.ajax({
+              type: "post",
+              url: "{% url 'get_statistic' %}",
+              dataType: "json",
+              async: false
+              }).responseText;
+
+          // Create our data table out of JSON data loaded from server.
+          var data = new google.visualization.DataTable(jsonData);
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 400, height: 240});
+        }
+
+      }
+    </script>
 {% endblock %}
 
 <!-- Подключение блока с основным контентом -->
@@ -22,6 +64,9 @@
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('blog')">Блог</a>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('shop')">Магазин</a>
                 <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('forum')">Форум</a>
+                {% if user.is_superuser %}
+                    <a href="#" class="list-group-item list-group-item-action" ng-click="change_active_tab('get_statistic')">Статистика посещений</a>
+                {% endif %}
             </div>
         </div>
         <div class="col-12 col-md-9">
@@ -248,6 +293,32 @@
                     </div>
                 </div>
             </div>
+            {% if user.is_superuser %}
+            <div class="container" ng-show="active_tab === 'get_statistic'">
+                <div class="col-12 col-md-12">
+                    <h1 class="text-center" style="margin: 35px 0;">График посещений пользователей</h1>
+                </div>
+                <div class="col-12">
+                    <div>
+                        <h4>Диапазон статистики</h4>
+                        <br>
+                        <label for="from_date">
+                            От:
+                            <input id="from_date" type="date">
+                        </label>
+
+                        <label for="to_date">
+                            До:
+                            <input id="to_date" type="date">
+                        </label>
+                            <button class="btn btn-primary">Применить</button>
+                    </div>
+                    <hr>
+                    <!--Div that will hold the pie chart-->
+                    <div id="chart_div"></div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
