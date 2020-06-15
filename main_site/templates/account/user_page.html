@@ -61,7 +61,7 @@
             <p class="text-center cart" style="margin-top: 30px; height: 225px;">
                 <img src="{{ user.image_url }}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
                 <img ng-click="uploadImage()" class="seven" src="https://lh3.googleusercontent.com/proxy/qSttlqwDNELy6eHtIcg6PCo76GomYDoVqUOvf94dvnYGrfU2ut7tiWlAgaWiTn1WLSEPxTh9qlvRe7tW79SbNJeW3qa6GkkD5AmEQ8JGBtepfXDQlFwy" alt="{{ user.full_name }}" height="225px" width="225px">
-                <input type="file" fileread="uploadme" />
+                <input type="file" fileread="uploadme" style="opacity: 0;">
             </p>
             <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;">{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">
@@ -183,7 +183,49 @@
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Магазин</h3>
                 <div class="row">
                     <div class="col-12">
-                        <button ng-if="shop_exist" class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                        <div class="row" ng-if="shop_exist">
+                            <div class="col-6 text-center" ng-click="change_shop_tab('products')">
+                                <h3 style="background-color: #d6d6d6; padding: 6px 0 0;height: 50px; cursor: pointer;" ng-style="active_shop_tab=='products'?{'background-color':'#54d43b'}:{'background-color':'#d6d6d6'}">Товары</h3>
+                            </div>
+                            <div class="col-6 text-center" ng-click="change_shop_tab('cards')">
+                                <h3 style="background-color: #d6d6d6; padding: 6px 0 0;height: 50px; cursor: pointer;" ng-style="active_shop_tab=='cards'?{'background-color':'#54d43b'}:{'background-color':'#d6d6d6'}">Покупки</h3>
+                            </div>
+                            <div ng-show="active_shop_tab=='products'" class="col-12">
+                                <div class="row">
+                                    <div class="col-12" style="margin: 20px 0;">
+                                        <button class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                                    </div>
+                                    <div class="col-12"></div>
+                                    <div class="col-12">
+                                        <table id="products" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Название</th>
+                                                    <th>Категория</th>
+                                                    <th>Старая цена</th>
+                                                    <th>Новая цена</th>
+                                                    <th>Рейтинг</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Название</th>
+                                                    <th>Категория</th>
+                                                    <th>Старая цена</th>
+                                                    <th>Новая цена</th>
+                                                    <th>Рейтинг</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="active_shop_tab=='cards'" class="col-12"></div>
+                        </div>
                         <div class="row" ng-if="!shop_exist">
                             <div class="form-group col-12">
                                 <label class="label" for="title">Название<span style="color: red;">*</span></label>
@@ -335,6 +377,12 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    $(document).ready(function() {
+        $('#products').DataTable( {
+            "ajax": "{% url 'shop_get_owner_products' %}"
+        } );
+    } );
+
     let MyApplication = angular.module('MyApplication',[]);
 
     MyApplication.config(['$interpolateProvider', function($interpolateProvider) {
@@ -360,10 +408,16 @@
         $scope.new_shop = {};
         $scope.new_product = {};
 
+        $scope.active_shop_tab = 'products';
+
 
 
         $scope.uploadImage = function() {
 
+        }
+
+        $scope.change_shop_tab = function(tab_name) {
+            $scope.active_shop_tab = tab_name;
         }
 
         $scope.make_shop = function(data) {

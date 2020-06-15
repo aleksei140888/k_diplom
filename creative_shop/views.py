@@ -8,6 +8,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse
+
 from creative_shop.models import Shop, Product, DeliveryMethod, Card, CardItem, ActiveDeliveryMethods
 from live_portal import settings
 from live_portal.utils import to_dict_list, MobileResponse
@@ -172,3 +174,41 @@ def success_payment(request):
 def error_payment(request):
 
     return render(request, 'error_payment.html')
+
+
+"""
+<th>ID</th>
+<th>Название</th>
+<th>Категория</th>
+<th>Старая цена</th>
+<th>Новая цена</th>
+<th>Рейтинг</th>
+<th>Действия</th>
+"""
+
+def shop_get_owner_products(request):
+    products = request.user.shops.first().products.all()
+    products_dict = {'data': []}
+    for product in products:
+        products_dict['data'].append([
+            product.id,
+            product.name,
+            product.category.name,
+            str(product.old_price),
+            str(product.new_price),
+            str(product.rating),
+            f'<a href="{reverse("delete_product", args=[product.id])}"><i class="fa fa-trash"></i></a>',
+        ])
+    return HttpResponse(json.dumps(products_dict))
+
+
+def delete_product(request, product_id):
+    product = Product.objects.filter(id=product_id).first()
+    if not product or product.shop.owner_id != request.user.id:
+        return redirect('home_page')
+    for card_item in product.products.all():
+        if card_item.card.status_id == 1:
+            card_item.delete()
+    product.delete()
+
+    return redirect('/')
