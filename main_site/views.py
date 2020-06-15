@@ -84,7 +84,7 @@ def user(request, user_id):
 
     return render(request, 'account/user.html', context={'user': user.to_dict()})
 
-@login_required(login_url='/auth/')
+
 def all_users_page(request):
     users = User.objects.all()
     paginator = Paginator(users, 10)
