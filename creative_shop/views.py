@@ -69,7 +69,6 @@ def make_shop(request):
     return HttpResponse(resp.return_success())
 
 
-@login_required(login_url='/auth/')
 def product(request, product_id):
     product_obj = Product.objects.filter(id=product_id).first()
     delivery_methods = DeliveryMethod.objects.all()
@@ -98,6 +97,7 @@ def card(request, card_id):
     return render(request, 'shop_card.html', context=context)
 
 
+@login_required(login_url='/auth/')
 def card_item(request):
     resp = MobileResponse()
     if request.method == "POST":

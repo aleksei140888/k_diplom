@@ -82,6 +82,14 @@ WSGI_APPLICATION = 'live_portal.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'diplom_k',
+        'USER': 'valeria_admin',
+        'PASSWORD': 'Nike13rus',
+        'HOST': 'diplomkarnauh.c0hannph0vns.eu-central-1.rds.amazonaws.com',
+        'PORT': '5432',
+    },
+    'default1': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
