@@ -31,7 +31,7 @@
         function drawChart() {
           var jsonData = $.ajax({
               type: "post",
-              url: "{% url 'get_statistic' %}",
+              url: "",
               dataType: "json",
               async: false
               }).responseText;
@@ -60,7 +60,8 @@
         <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); ">
             <p class="text-center cart" style="margin-top: 30px; height: 225px;">
                 <img src="{{ user.image_url }}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
-                <img class="seven" src="https://lh3.googleusercontent.com/proxy/qSttlqwDNELy6eHtIcg6PCo76GomYDoVqUOvf94dvnYGrfU2ut7tiWlAgaWiTn1WLSEPxTh9qlvRe7tW79SbNJeW3qa6GkkD5AmEQ8JGBtepfXDQlFwy" alt="{{ user.full_name }}" height="225px" width="225px">
+                <img ng-click="uploadImage()" class="seven" src="https://lh3.googleusercontent.com/proxy/qSttlqwDNELy6eHtIcg6PCo76GomYDoVqUOvf94dvnYGrfU2ut7tiWlAgaWiTn1WLSEPxTh9qlvRe7tW79SbNJeW3qa6GkkD5AmEQ8JGBtepfXDQlFwy" alt="{{ user.full_name }}" height="225px" width="225px">
+                <input type="file" fileread="uploadme" />
             </p>
             <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;">{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">
@@ -100,7 +101,7 @@
 
                             <div class="form-group">
                                 <label for="bio_area">Биография: </label>
-                                <textarea name="bio_area" id="bio_area" cols="110" rows="4" ng-model="profile_content.bio"></textarea>
+                                <textarea style="width: 100%;" name="bio_area" id="bio_area" rows="4" ng-model="profile_content.bio"></textarea>
                             </div>
 
                             <div class="btn btn-success">Сохранить</div>
@@ -360,6 +361,10 @@
         $scope.new_product = {};
 
 
+
+        $scope.uploadImage = function() {
+
+        }
 
         $scope.make_shop = function(data) {
             requestService.make_shop(data)

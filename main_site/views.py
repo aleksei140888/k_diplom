@@ -47,7 +47,7 @@ def get_card_items_count(request):
     return HttpResponse(ajax_resp.return_success())
 
 
-@login_required(login_url='/auth/signin/')
+@login_required(login_url='/auth/')
 def user_page(request, user_id):
     user = User.objects.filter(id=user_id).first()
     categories = ProductCategory.objects.all()
@@ -63,7 +63,7 @@ def user_page(request, user_id):
     return render(request, 'account/user_page.html', context=context)
 
 
-@login_required(login_url='/auth/signin/')
+@login_required(login_url='/auth/')
 def load_profile(request):
     raw = MobileResponse()
 
@@ -75,7 +75,7 @@ def load_profile(request):
                                          detail=f"Request method {request.method} does not support"))
 
 
-@login_required(login_url='/auth/signin/')
+@login_required(login_url='/auth/')
 def user(request, user_id):
     user = User.objects.filter(id=user_id).first()
 
@@ -84,7 +84,7 @@ def user(request, user_id):
 
     return render(request, 'account/user.html', context={'user': user.to_dict()})
 
-
+@login_required(login_url='/auth/')
 def all_users_page(request):
     users = User.objects.all()
     paginator = Paginator(users, 10)
@@ -159,15 +159,6 @@ def auth_sign(request):
 def auth_signout(request):
     logout(request)
     return redirect('home_page')
-
-
-def get_statistic(request):
-    if request.method == "GET":
-        return render(request, "account/admin/statistic.html")
-    elif request.method == "POST":
-        pass
-    else:
-        pass
 
 
 def check_number(request):

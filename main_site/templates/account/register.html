@@ -81,6 +81,7 @@
             $scope.phone_number_confirm_code = 0;
             $scope.phone_number_code = '';
             $scope.phone_confirmed = 0;
+            $scope.phone_call_bloked = 0 ;
 
             $scope.password = '';
             $scope.confim_password = '';
@@ -114,12 +115,17 @@
             }
 
             $scope.send_call_request = function() {
+                if ($scope.phone_call_bloked) {
+                    Swal.fire('Вы уже отправили запрос на вызов, дождитесь звонка')
+                    return 0;
+                }
                 requestService.send_call_request({'phone_number': $scope.phone_number})
                 .then(function(resp) {
                     if (resp.status === 'success') {
                         $scope.phone_number_confirm_code = resp.detail;
+                        $scope.phone_call_bloked = 1;
                     } else {
-
+                        $scope.phone_call_bloked = 0;
                     }
                 });
             }

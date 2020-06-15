@@ -70,7 +70,9 @@
     {% endfor %}
 	</div>
 </div>
-    <br><br><br><br><br><br><br><br><br><br>
+    <hr>
+    {% include "pagination/pagination.html" with page=products %}
+    <hr>
 {% endblock %}
 
 {% block scripts %}

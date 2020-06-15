@@ -2,6 +2,7 @@ import json
 import time
 from hashlib import md5
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -20,7 +21,7 @@ def all_shops(request):
     if not shop_objects:
         return redirect('home_page')
 
-    paginator = Paginator(shop_objects, 10)
+    paginator = Paginator(shop_objects, 8)
     page = request.GET.get('page')
 
     try:
@@ -39,6 +40,18 @@ def shop(request, shop_id):
     shop_obj = Shop.objects.filter(id=shop_id).first()
     products = to_dict_list(Product.objects.filter(shop_id=shop_id).all())
 
+    paginator = Paginator(products, 8)
+    page = request.GET.get('page')
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, поставим первую страницу
+        products = paginator.page(1)
+    except EmptyPage:
+        # Если страница больше максимальной, доставить последнюю страницу результатов
+        products = paginator.page(paginator.num_pages)
+
     return render(request, 'shop_shop.html', context={'shop': shop_obj, 'products': products})
 
 
@@ -54,6 +67,7 @@ def make_shop(request):
     return HttpResponse(resp.return_success())
 
 
+@login_required(login_url='/auth/')
 def product(request, product_id):
     product_obj = Product.objects.filter(id=product_id).first()
     delivery_methods = DeliveryMethod.objects.all()

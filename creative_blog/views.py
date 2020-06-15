@@ -8,7 +8,7 @@ from main_site.models import User
 
 def all_blogs(request):
     blog_objects = MasterClass.objects.all()
-    paginator = Paginator(blog_objects, 10)
+    paginator = Paginator(blog_objects, 5)
     page = request.GET.get('page')
 
     try:
