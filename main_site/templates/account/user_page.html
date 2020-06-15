@@ -226,10 +226,9 @@
                             </div>
                             <div ng-show="active_shop_tab=='cards'" class="col-12">
                                 <div class="row">
-                                    <div class="col-12" style="margin: 20px 0;">
-                                        <button class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                                    <div>
+                                        <h3 class="text-center">Покупки</h3>
                                     </div>
-                                    <div class="col-12"></div>
                                     <div class="col-12">
                                         <table id="products" class="display" style="width:100%">
                                             <thead>
@@ -307,6 +306,40 @@
                         </div>
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Добавить</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="container" ng-show="active_tab === 'shop_edit_product'">
+                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Магазин - Добавить товар</h3>
+                <form action="{% url 'edit_product' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <div class="row">
+                        <input type="hidden" name="id" ng-model="edit_product_id">
+                        <div class="form-group col-12">
+                            <label class="label" for="name">Название<span style="color: red;">*</span></label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Заголовок" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="description">Описание<span style="color: red;">*</span></label>
+                            <textarea id="description" name="description" type="text" class="form-control" placeholder="Текст" rows="10" required></textarea>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="old_price">Старая цена<span style="color: red;">*</span></label>
+                            <input id="old_price" name="old_price" type="text" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="new_price">Новая цена<span style="color: red;">*</span></label>
+                            <input id="new_price" name="new_price" type="text" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="photo_filename">Фото</label>
+                            <input id="photo_filename" name="file" type="file" class="form-control" placeholder="Фото" required>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Сохранить</button>
                         </div>
                     </div>
                 </form>
@@ -444,9 +477,14 @@
         $scope.new_shop = {};
         $scope.new_product = {};
 
+        $scope.edit_product_id = '';
+
         $scope.active_shop_tab = 'products';
 
-
+        $scope.edit_product = function(product_id) {
+            $scope.change_active_tab('shop_edit_product')
+            $scope.edit_product_id = product_id;
+        }
 
         $scope.uploadImage = function() {
 

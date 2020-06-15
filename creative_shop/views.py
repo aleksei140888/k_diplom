@@ -187,7 +187,8 @@ def shop_get_owner_products(request):
             str(product.old_price),
             str(product.new_price),
             str(product.rating),
-            f'<a href="{reverse("delete_product", args=[product.id])}"><i class="fa fa-trash"></i></a>',
+            f'<button class="btn btn-warning" onclick="window.open({reverse("edit_product_window", args=[product.id])})"><i class="fa fa-pencil"></i></button>'
+            f'<a href="{reverse("delete_product", args=[product.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
         ])
     return HttpResponse(json.dumps(products_dict))
 
@@ -217,3 +218,21 @@ def add_product(request):
         rating=5,
     )
     return redirect(reverse('user_page', args=[request.user.id]))
+
+
+def edit_product(request):
+    data = request.POST
+    product = Product.objects.filter(id=data['id'])(
+        name=data['name'],
+        description=data['description'],
+        old_price=data['new_price'],
+        new_price=data['new_price'],
+        category_id=data['category_id'],
+        photo_filename=request.FILES['file'],
+    )
+    return HttpResponse()
+
+
+def edit_product_window(request, product_id):
+    product_obj = Product.objects.filter(id=product_id).first()
+    return render(request, 'window_edit_product.html', context={'product': product_obj})
