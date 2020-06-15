@@ -33,7 +33,8 @@ class User(AbstractUser):
             "is_superuser": self.is_superuser,
             "rating": str(self.rating),
             "shop_name": shop.name if shop else '',
-            "image_url": self.photo.url if self.photo else 'https://banner2.cleanpng.com/20180401/kve/kisspng-user-'
+            "profile_link": f'http://127.0.0.1:8000/blogs/{self.id}/',
+            "image_url": 'http://127.0.0.1:8000/static/' + self.photo.url if self.photo else 'https://banner2.cleanpng.com/20180401/kve/kisspng-user-'
                                                            'profile-computer-icons-male-id-5ac19772b4d884.'
                                                            '3909818215226366587408.jpg',
         }

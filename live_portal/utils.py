@@ -29,7 +29,7 @@ class MobileResponse:
         self.raw['time'] = time.monotonic()
 
     def add_error(self, parameter, detail):
-        self.raw['errors'].append({'parameter': parameter, 'detail': detail})
+        self.raw['errors'] = detail
 
     def set_response(self, dict):
         self.raw['detail'] = dict

@@ -1,0 +1,35 @@
+{% extends 'base_template.html' %}
+{% load static %}
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="min-height: 400px;">
+        <div class="col-12"><h2 class="text-center" style="font-weight: bold; margin: 30px 0;">Пользователи</h2></div>
+            {% for user in users_dict %}
+                <div class="col-6 col-md-3">
+                    <div class="text-center border" style="background: #afaeae54; min-height: 430px; border-radius: 8px; margin-bottom: 25px;">
+                        <img src="{{ user.image_url }}" alt="{{ user.name }}" width="150px" height="200px">
+                        <h4 style="padding: 10px 0;"><a href="{{ user.profile_link }}">{{ user.full_name }}</a></h4>
+                        <p style=" overflow: hidden;
+                                       text-overflow: ellipsis;
+                                       display: -webkit-box;
+                                       -webkit-line-clamp: 5; /* number of lines to show */
+                                       -webkit-box-orient: vertical;">{{ user.bio }}</p>
+                        <p style="font-size: 24px; padding: 5px 0; height: 30px;"><a href="{% url 'shop' user.id %}">{{ user.shop_name }}</a></p>
+                        <p style="height: 20px; margin-top: 20px;">Рейтинг: {{ user.rating }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+            {% include "pagination/pagination.html" with page=users %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

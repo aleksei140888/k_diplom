@@ -20,7 +20,7 @@ def all_blogs(request):
         # Если страница больше максимальной, доставить последнюю страницу результатов
         mcs = paginator.page(paginator.num_pages)
 
-    return render(request, 'all_creative_blogs.html', context={'page': page, 'mcs': to_dict_list(mcs)})
+    return render(request, 'all_creative_blogs.html', context={'page_obj': page, 'articles': mcs, 'mcs': to_dict_list(mcs)})
 
 
 def blog(request, user_id):

@@ -133,7 +133,7 @@
             {% for user in users %}
                 <div class="col-6 col-md-3">
                     <div class="text-center border" style="background: #afaeae54; min-height: 430px; border-radius: 8px; margin-bottom: 25px;">
-                        <img src="static/{{ user.image_url }}" alt="{{ user.name }}" width="150px" height="200px">
+                        <img src="{{ user.image_url }}" alt="{{ user.name }}" width="150px" height="200px">
                         <h4 style="padding: 10px 0;"><a href="{{ user.profile_link }}">{{ user.full_name }}</a></h4>
                         <p style=" overflow: hidden;
                                        text-overflow: ellipsis;

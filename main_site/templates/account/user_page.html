@@ -54,7 +54,7 @@
     <div class="row" style="padding-top: 30px; padding-bottom: 30px;">
         <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); ">
             <p class="text-center" style="margin-top: 30px;">
-                <img src="{% static user.image_url %}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
+                <img src="{{ user.image_url }}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
             </p>
             <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;">{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">

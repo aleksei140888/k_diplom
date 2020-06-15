@@ -22,10 +22,13 @@ urlpatterns = [
     path('get_card_items_count/', views.get_card_items_count, name='get_card_items_count'),
     path('user_profile/<int:user_id>/', views.user_page, name='user_page'),
     path('user/<int:user_id>/', views.user, name='user'),
+    path('users/', views.all_users_page, name='all_users_page'),
     path('load_profile/', views.load_profile, name='load_profile'),
+    path('help/', views.help_page, name='help_page'),
     path('auth/', views.auth_page, name='auth_page'),
     path('auth/sign', views.auth_sign, name='auth_sign'),
     path('auth/register', views.auth_register, name='auth_register'),
+    path('auth/check_number', views.check_number, name='check_number'),
     path('auth/signout', views.auth_signout, name='auth_signout'),
     path('', views.home_page, name='home_page'),
 

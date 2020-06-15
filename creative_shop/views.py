@@ -32,7 +32,7 @@ def all_shops(request):
         # Если страница больше максимальной, доставить последнюю страницу результатов
         shops = paginator.page(paginator.num_pages)
 
-    return render(request, 'shop_shop.html', context={'page': page, 'shops': shops})
+    return render(request, 'shop_all_shops.html', context={'page': page, 'shops': shops})
 
 
 def shop(request, shop_id):

@@ -1,7 +1,10 @@
 import json
+from random import randint
 
+import requests
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 
@@ -24,7 +27,6 @@ def home_page(request):
 
     for user in users:
         user['profile_link'] = f'{request.build_absolute_uri()}user/{user["id"]}/'
-    print(users)
     context = {
         'users': users,
         'shops': shops,
@@ -83,6 +85,23 @@ def user(request, user_id):
     return render(request, 'account/user.html', context={'user': user.to_dict()})
 
 
+def all_users_page(request):
+    users = User.objects.all()
+    paginator = Paginator(users, 10)
+    page = request.GET.get('page')
+
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, поставим первую страницу
+        users = paginator.page(1)
+    except EmptyPage:
+        # Если страница больше максимальной, доставить последнюю страницу результатов
+        users = paginator.page(paginator.num_pages)
+
+    return render(request, 'account/all_users.html', context={'page_obj': page, 'users': users, 'users_dict': to_dict_list(users)})
+
+
 def auth_page(request):
     if request.method == 'GET':
         return render(request, 'account/auth_page.html')
@@ -97,16 +116,26 @@ def auth_register(request):
         user = User.objects.filter(email=request.POST['email']).filter(is_active=1).first()
 
         if user:
-            return HttpResponseBadRequest({'error': 'Пользователь уже существует'})
+            return HttpResponseBadRequest({'Пользователь уже существует'})
+
+        if request.POST['password'] != request.POST['confirm_password']:
+            return HttpResponseBadRequest({'Пароли не совпадают'})
 
         new_user = User.objects.create(
             email=request.POST['email'],
             username=request.POST['username'],
             first_name=request.POST['first_name'],
             last_name=request.POST['last_name'],
+            phone_number=request.POST['phone_number'],
+            phone_number_verify_code=request.POST['phone_number_code'],
+            forum_nickname=request.POST['forum_nickname'],
         )
 
         new_user.set_password(request.POST['password'])
+
+        new_user.save()
+
+        return redirect('auth_page')
     else:
         pass
 
@@ -139,3 +168,30 @@ def get_statistic(request):
         pass
     else:
         pass
+
+
+def check_number(request):
+    resp = MobileResponse()
+    data = json.loads(request.body.decode('utf-8'))
+
+    if 'phone_number' not in data:
+        resp.add_error('request/data', 'Вы не ввели номер телефона')
+        return HttpResponse(resp.return_error())
+
+    code = randint(1000, 9999)
+
+    try:
+        ucaller_link = f'https://api.ucaller.ru/v1.0/initCall?service_id={settings.UCALLER_ID}&key={settings.UCALLER_SECRET_KEY}&phone={data["phone_number"]}&code={code}'
+        ucaller_request = requests.get(ucaller_link)
+    except Exception:
+        resp.add_error('request/confirm', 'Произошла ошибка, возможно, вы не подключены к интернету или сервис не доступен.')
+        return HttpResponse(resp.return_error())
+
+    resp.set_response(code)
+
+    return HttpResponse(resp.return_success())
+
+
+def help_page(request):
+    return render(request, 'help.html')
+

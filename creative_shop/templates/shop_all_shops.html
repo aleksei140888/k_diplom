@@ -1,5 +1,5 @@
 {% extends 'base_template.html' %}
-
+{% load static %}
 {% block head %}
 
 {% endblock %}
@@ -7,17 +7,19 @@
 {% block content %}
     <div class="container">
         <div class="row" style="min-height: 400px;">
+        <div class="col-12"><h2 class="text-center" style="font-weight: bold; margin: 30px 0;">Магазины</h2></div>
             {% for shop in shops %}
                 <div class="col-12 col-md-3">
-                    <div class="text-center border-left" style="background: #f5f5f5; height: 300px; border-radius: 8px; margin-bottom: 25px;">
-                        <p style="font-size: 30px; padding: 15px 0;"><a href="#">{{ shop.name }}</a></p>
+                    <div class="text-center border-left" style="background: #fffffffb; height: 300px; border-radius: 8px; margin-bottom: 25px;">
+                        <p style="font-size: 30px; padding: 15px 0;">{{ shop.name }}</p>
                         <p style="height: 100px;">{{ shop.description }}</p>
                         <p style="height: 20px;">Рейтинг: {{ shop.rating }}</p>
                         <hr>
-                        <a href="#" class="btn btn-lg btn-success">Перейти</a>
+                        <a href="{% url 'shop' shop.id %}" class="btn btn-lg btn-danger">Перейти</a>
                     </div>
                 </div>
             {% endfor %}
+            {% include "pagination/pagination.html" with page=shops %}
         </div>
     </div>
 {% endblock %}

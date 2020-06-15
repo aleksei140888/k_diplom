@@ -38,6 +38,7 @@
                 </div>
             </div>
             {% endfor %}
+            {% include "pagination/pagination.html" with page=articles %}
         </div>
     </div>
 {% endblock %}
