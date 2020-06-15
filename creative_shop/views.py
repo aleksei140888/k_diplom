@@ -64,8 +64,11 @@ def make_shop(request):
 
     data = json.loads(request.body.decode('utf-8'))
 
-    Shop.objects.create(name=data['name'], description=data['description'], rating=5, owner_id=request.user.id)
+    shop = Shop.objects.create(name=data['name'], description=data['description'], rating=5, owner_id=request.user.id)
 
+    for method in DeliveryMethod.objects.all():
+        ActiveDeliveryMethods.objects.create(shop_id=shop.id, delivery_method_id=method.id)
+    
     return HttpResponse(resp.return_success())
 
 
