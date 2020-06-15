@@ -176,6 +176,23 @@ def error_payment(request):
     return render(request, 'error_payment.html')
 
 
+def shop_get_owner_cards(request):
+    cards = request.user.shops.first().cards.all()
+    products_dict = {'data': []}
+    for product in products:
+        products_dict['data'].append([
+            product.id,
+            product.name,
+            product.category.name,
+            str(product.old_price),
+            str(product.new_price),
+            str(product.rating),
+            f'<button class="btn btn-warning" onclick="window.open({reverse("edit_product_window", args=[product.id])})"><i class="fa fa-pencil"></i></button>'
+            f'<a href="{reverse("delete_product", args=[product.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
+        ])
+    return HttpResponse(json.dumps(products_dict))
+
+
 def shop_get_owner_products(request):
     products = request.user.shops.first().products.all()
     products_dict = {'data': []}

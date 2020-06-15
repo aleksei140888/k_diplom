@@ -44,10 +44,10 @@
                 <input ng-model="password" ng-change="check_passwords()" name="password" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="">
 
                 <label for="confirm_password">Подтверждение пароля</label>
-                <input name="confirm_password" type="password" id="confirm_password" class="form-control" placeholder="Подтверждение пароля" required="">
+                <input name="confirm_password" ng-model="confim_password" ng-change="check_passwords()" type="password" id="confirm_password" class="form-control" placeholder="Подтверждение пароля" required="">
                 <br>
                 <button ng-if="phone_confirmed && password_confirmed" class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрировать</button>
-                <div ng-else class="btn btn-lg btn-primary btn-block" ng-click="show_code_error()">Зарегистрировать</div>
+                <div ng-if="!phone_confirmed || !password_confirmed" class="btn btn-lg btn-primary btn-block" ng-click="show_code_error()">Зарегистрировать</div>
             </form>
             <br>
             <hr>
@@ -78,7 +78,7 @@
             $scope.register = {};
 
             $scope.phone_number = '';
-            $scope.phone_number_confirm_code = 0;
+            $scope.phone_number_confirm_code = '';
             $scope.phone_number_code = '';
             $scope.phone_confirmed = 0;
             $scope.phone_call_bloked = 0 ;
@@ -89,7 +89,7 @@
 
 
             $scope.check_passwords = function(){
-                if ($scope.password === $scope.confim_password) {
+                if ($scope.password == $scope.confim_password) {
                     $scope.password_confirmed = 1;
                 } else {
                     $scope.password_confirmed = 0;
@@ -107,7 +107,7 @@
             }
 
             $scope.check_number_code = function() {
-                if ($scope.phone_number_code === $scope.phone_number_confirm_code) {
+                if ($scope.phone_number_code == $scope.phone_number_confirm_code) {
                     $scope.phone_confirmed = 1;
                 } else {
                     $scope.phone_confirmed = 0;

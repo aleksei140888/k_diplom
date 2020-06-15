@@ -171,12 +171,12 @@ def check_number(request):
 
     code = randint(1000, 9999)
 
-    try:
-        ucaller_link = f'https://api.ucaller.ru/v1.0/initCall?service_id={settings.UCALLER_ID}&key={settings.UCALLER_SECRET_KEY}&phone={data["phone_number"]}&code={code}'
-        ucaller_request = requests.get(ucaller_link)
-    except Exception:
-        resp.add_error('request/confirm', 'Произошла ошибка, возможно, вы не подключены к интернету или сервис не доступен.')
-        return HttpResponse(resp.return_error())
+    # try:
+    #     ucaller_link = f'https://api.ucaller.ru/v1.0/initCall?service_id={settings.UCALLER_ID}&key={settings.UCALLER_SECRET_KEY}&phone={data["phone_number"]}&code={code}'
+    #     ucaller_request = requests.get(ucaller_link)
+    # except Exception:
+    #     resp.add_error('request/confirm', 'Произошла ошибка, возможно, вы не подключены к интернету или сервис не доступен.')
+    #     return HttpResponse(resp.return_error())
 
     resp.set_response(code)
 
