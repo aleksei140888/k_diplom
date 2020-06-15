@@ -26,7 +26,7 @@
         </div>
         <div class="col-12 col-md-2">
             <img src="https://banner2.cleanpng.com/20180401/kve/kisspng-user-profile-computer-icons-male-id-5ac19772b4d884.3909818215226366587408.jpg" alt="Фото пользователя" class="col-12">
-            <a href="#" class="col-12">{{ shop.owner.first_name }} {{ shop.owner.last_name }}</a>
+            <a href="{% url 'blog' shop.owner.id %}" class="col-12">{{ shop.owner.first_name }} {{ shop.owner.last_name }}</a>
         </div>
     </div>
     <hr>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <a href="#" class="btn btn-primary">Купить</a>
+                    <a href="{% url 'product' product.id %}" class="btn btn-primary">Купить</a>
                 </div>
 
             </div>

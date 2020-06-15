@@ -46,6 +46,11 @@
 
       }
     </script>
+    <style>
+    .cart IMG { position: relative; }
+    .seven { left: 0px; top: -225px; z-index: 9999; border-radius: 200px; border: 1px solid silver; opacity: 0.0;}
+    .seven:hover {opacity: 0.5; cursor: pointer;}
+    </style>
 {% endblock %}
 
 <!-- Подключение блока с основным контентом -->
@@ -53,8 +58,9 @@
 <div class="container" id="SecondAPP" ng-app="MyApplication" ng-controller="UserProfileController" ng-cloak>
     <div class="row" style="padding-top: 30px; padding-bottom: 30px;">
         <div class="col-12 col-md-3" style="border: 1px solid lightgray; background-color: rgba(207, 207, 207, 0.5); ">
-            <p class="text-center" style="margin-top: 30px;">
+            <p class="text-center cart" style="margin-top: 30px; height: 225px;">
                 <img src="{{ user.image_url }}" alt="{{ user.full_name }}" height="225px" width="225px" style="border-radius: 200px; border: 1px solid silver;">
+                <img class="seven" src="https://lh3.googleusercontent.com/proxy/qSttlqwDNELy6eHtIcg6PCo76GomYDoVqUOvf94dvnYGrfU2ut7tiWlAgaWiTn1WLSEPxTh9qlvRe7tW79SbNJeW3qa6GkkD5AmEQ8JGBtepfXDQlFwy" alt="{{ user.full_name }}" height="225px" width="225px">
             </p>
             <strong><p class="text-center" style="margin-top: 20px; margin-bottom: 20px;">{{ user.full_name }}</p></strong>
             <div class="list-group" style="margin-bottom: 30px;">
