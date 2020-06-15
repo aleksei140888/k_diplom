@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'live_portal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'diplom_k',
-        'USER': 'valeria_admin',
-        'PASSWORD': 'Nike13rus',
-        'HOST': 'diplomkarnauh.c0hannph0vns.eu-central-1.rds.amazonaws.com',
+        'NAME': 'Handmade',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     },
     'default1': {
