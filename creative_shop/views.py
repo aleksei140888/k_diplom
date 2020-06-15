@@ -176,16 +176,6 @@ def error_payment(request):
     return render(request, 'error_payment.html')
 
 
-"""
-<th>ID</th>
-<th>Название</th>
-<th>Категория</th>
-<th>Старая цена</th>
-<th>Новая цена</th>
-<th>Рейтинг</th>
-<th>Действия</th>
-"""
-
 def shop_get_owner_products(request):
     products = request.user.shops.first().products.all()
     products_dict = {'data': []}
@@ -211,4 +201,19 @@ def delete_product(request, product_id):
             card_item.delete()
     product.delete()
 
-    return redirect('/')
+    return redirect(reverse('user_page', args=[request.user.id]))
+
+
+def add_product(request):
+    data = request.POST
+    product = Product.objects.create(
+        name=data['name'],
+        description=data['description'],
+        old_price=data['new_price'],
+        new_price=data['new_price'],
+        category_id=data['category_id'],
+        photo_filename=request.FILES['file'],
+        shop_id=request.user.shops.first().id,
+        rating=5,
+    )
+    return redirect(reverse('user_page', args=[request.user.id]))

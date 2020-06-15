@@ -28,6 +28,7 @@ urlpatterns = [
     path('card/<int:card_id>/', views.card, name='shop_card'),
     path('payment/make/', views.payment_make, name='payment_make'),
     path('shop/delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('shop/add_product/', views.add_product, name='add_product'),
     path('shop/make/', views.make_shop, name='make_shop'),
     path('<int:shop_id>/', views.shop, name='shop'),
     path('', views.all_shops, name='all_shops'),

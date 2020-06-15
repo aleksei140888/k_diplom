@@ -224,7 +224,40 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-show="active_shop_tab=='cards'" class="col-12"></div>
+                            <div ng-show="active_shop_tab=='cards'" class="col-12">
+                                <div class="row">
+                                    <div class="col-12" style="margin: 20px 0;">
+                                        <button class="btn btn-success pull-right" ng-click="change_active_tab('shop_add_product')">Добавить товар</button>
+                                    </div>
+                                    <div class="col-12"></div>
+                                    <div class="col-12">
+                                        <table id="products" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Название</th>
+                                                    <th>Категория</th>
+                                                    <th>Цена</th>
+                                                    <th>Новая цена</th>
+                                                    <th>Рейтинг</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Название</th>
+                                                    <th>Категория</th>
+                                                    <th>Старая цена</th>
+                                                    <th>Новая цена</th>
+                                                    <th>Рейтинг</th>
+                                                    <th>Действия</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row" ng-if="!shop_exist">
                             <div class="form-group col-12">
@@ -245,35 +278,38 @@
 
             <div class="container" ng-show="active_tab === 'shop_add_product'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Магазин - Добавить товар</h3>
-                <div class="row">
-                    <div class="form-group col-12">
-                        <label class="label" for="title">Название<span style="color: red;">*</span></label>
-                        <input id="title" type="text" class="form-control" placeholder="Заголовок" ng-model="new_product.name">
+                <form action="{% url 'add_product' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label class="label" for="name">Название<span style="color: red;">*</span></label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Заголовок" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="description">Описание<span style="color: red;">*</span></label>
+                            <textarea id="description" name="description" type="text" class="form-control" placeholder="Текст" rows="10" required></textarea>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="new_price">Цена<span style="color: red;">*</span></label>
+                            <input id="new_price" name="new_price" type="text" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="category">Категория<span style="color: red;">*</span></label>
+                            <select id="category" name="category_id" required>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="photo_filename">Фото</label>
+                            <input id="photo_filename" name="file" type="file" class="form-control" placeholder="Фото" required>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Добавить</button>
+                        </div>
                     </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="mc_text">Описание<span style="color: red;">*</span></label>
-                        <textarea id="mc_text" type="text" class="form-control" placeholder="Текст" rows="10" ng-model="new_product.description"></textarea>
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="photo_file">Цена<span style="color: red;">*</span></label>
-                        <input id="photo_file" type="text" class="form-control" placeholder="0.00" ng-model="new_product.new_price">
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="category">Категория<span style="color: red;">*</span></label>
-                        <select id="category" ng-model="new_product.category_id">
-                            {% for category in categories %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="video_file">Фото</label>
-                        <input id="video_file" type="file" class="form-control" placeholder="Фото" ng-model="new_product.photo">
-                    </div>
-                    <div class="col-12">
-                        <div class="btn btn-primary" ng-click="change_password_form_submit(settings_block)">Добавить</div>
-                    </div>
-                </div>
+                </form>
 
             </div>
 

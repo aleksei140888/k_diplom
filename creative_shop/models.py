@@ -42,7 +42,7 @@ class Product(models.Model):
     old_price = models.DecimalField(max_digits=10, decimal_places=2)
     new_price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    photo_filename = models.ImageField(upload_to='product_photo', blank=True)
+    photo_filename = models.ImageField(upload_to='', blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
