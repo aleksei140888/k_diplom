@@ -1,5 +1,5 @@
 {% extends 'base_template.html' %}
-
+{% load static %}
 {% block head %}
 
 {% endblock %}
@@ -30,15 +30,15 @@
             <div class="col-md-4">
                  <div class="col-12">
                      <div class="col-12 col-md-4" style="margin-top: 10px; ">
-                         <img src="/static/photo5.jpg" alt="Юзер лого" style="height: 25vh; width: 25vh;">
+                         <img src="{{ article.author.image_url }}" alt="Юзер лого" style="height: 25vh; width: 25vh;">
                      </div>
                      <p style="margin-top: 20px;">Автор статьи:</p>
                      <h3 style="margin-top: 20px;">{{ article.author.first_name }} {{ article.author.last_name }}</h3>
                      <br>
                      <p>Биография: <br>
-                        {{ user.bio }}</p>
+                        {{ article.author.bio }}</p>
                      <br>
-                     <p>Рейтинг: {{ user.rating }}</p>
+                     <p>Рейтинг: {{ article.author.rating }}</p>
                 </div>
             </div>
 

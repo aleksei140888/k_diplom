@@ -140,7 +140,7 @@
                                        display: -webkit-box;
                                        -webkit-line-clamp: 5; /* number of lines to show */
                                        -webkit-box-orient: vertical;">{{ user.bio }}</p>
-                        <p style="font-size: 24px; padding: 5px 0; height: 30px;"><a href="#">{{ user.shop_name }}</a></p>
+                        <p style="font-size: 24px; padding: 5px 0; height: 30px;"><a href="{% url 'shop' user.id %}">{{ user.shop_name }}</a></p>
                         <p style="height: 20px; margin-top: 20px;">Рейтинг: {{ user.rating }}</p>
                     </div>
                 </div>
