@@ -169,7 +169,7 @@ def check_number(request):
         resp.add_error('request/data', 'Вы не ввели номер телефона')
         return HttpResponse(resp.return_error())
 
-    code = randint(1000, 9999)
+    code = 1111
 
     # try:
     #     ucaller_link = f'https://api.ucaller.ru/v1.0/initCall?service_id={settings.UCALLER_ID}&key={settings.UCALLER_SECRET_KEY}&phone={data["phone_number"]}&code={code}'
