@@ -308,7 +308,7 @@ def shop_get_pursaches(request):
                 card.id,
                 card_item.item.name,
                 str(card_item.item.new_price),
-                card.delivery_method.name,
+                card.delivery_method.name if card.delivery_method else 'Требует уточнения',
                 card.status.name_ru,
             ])
     return HttpResponse(json.dumps(products_dict))
