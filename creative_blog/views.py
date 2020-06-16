@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from creative_blog.models import MasterClass
+from creative_blog.models import MasterClass, MasterClassPhoto, MasterClassVideo
 from live_portal.utils import to_dict_list, activity
 from main_site.models import User
 
@@ -94,3 +94,28 @@ def edit_master_class_window(request, article_id):
 
     product_obj = MasterClass.objects.filter(id=article_id).first()
     return render(request, 'window_edit_product.html', context={'product': product_obj})
+
+
+def article_create(request):
+
+    data = request.POST
+    print(data)
+    article = MasterClass.objects.create(
+        title=data['title'],
+        text=data['text'],
+        author_id=request.user.id
+    )
+
+    photo = MasterClassPhoto.objects.create(
+        master_class_id=article.id,
+        filename=request.FILES['photo_file'],
+        extension='jpg',
+    )
+
+    if request.FILES['video_file']:
+        video = MasterClassVideo.objects.create(
+            master_class_id=article.id,
+            filename=request.FILES['video_file'],
+            extension='mp4',
+        )
+    return redirect(reverse('user_page', args=[request.user.id]))

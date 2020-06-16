@@ -21,6 +21,7 @@ urlpatterns = [
     path('blog_get_masterclasses/', views.blog_get_masterclasses, name='blog_get_masterclasses'),
     path('delete_master_class/<int:article_id>/', views.delete_master_class, name='delete_master_class'),
     path('edit_master_class_window/<int:article_id>/', views.edit_master_class_window, name='edit_master_class_window'),
+    path('article/create/', views.article_create, name='article_create'),
     path('article/<int:article_id>/', views.article, name='article'),
     path('<int:user_id>/', views.blog, name='blog'),
     path('', views.all_blogs, name='all_blogs'),

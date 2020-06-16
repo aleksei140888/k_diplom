@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 col-md-12">
                 {% for product in card.products %}
-                    <div class="row" style="margin-top: 10px;">
+                    <div class="row" style="margin-top: 10px;" id="product_{{ product.id }}">
                         <div class="col-12 col-md-4">
                             {{ product.name }}
                         </div>
@@ -101,10 +101,10 @@
         }
 
         $scope.deleteItem = function(id){
-            requestService.delete_item({'id': id})
+            requestService.delete_item({'card_item_id': id})
             .then(function(resp) {
                 if (resp.status === 'success') {
-                    $scope.profile_content = resp.detail;
+                    document.getElementById('product_' + resp.detail).innerHTML = '';
                 } else {
                     Swal.fire('Ошибка');
                 }
@@ -146,9 +146,9 @@
 
         function delete_item(data) {
             var request = $http({
-                method: 'post',
+                method: 'delete',
                 data: JSON.stringify(data),
-                url: '/change_password/'
+                url: '{% url 'card_delete_item' %}'
             });
             return request.then(handleSuccess, handleError);
         }

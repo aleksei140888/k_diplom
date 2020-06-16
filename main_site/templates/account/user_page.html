@@ -199,25 +199,28 @@
             <div class="container" ng-show="active_tab === 'blog_add_article'">
                 <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Блог - Добавить статью</h3>
                 <div class="row">
-                    <div class="form-group col-12">
-                        <label class="label" for="title">Заголовок<span style="color: red;">*</span></label>
-                        <input id="title" type="text" class="form-control" placeholder="Заголовок" ng-model="article_new.title">
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="mc_text">Текст<span style="color: red;">*</span></label>
-                        <textarea id="mc_text" type="text" class="form-control" placeholder="Текст" rows="10" ng-model="article_new.text"></textarea>
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="photo_file">Фото<span style="color: red;">*</span></label>
-                        <input id="photo_file" type="file" class="form-control" placeholder="Фото" ng-model="article_new.photo">
-                    </div>
-                    <div class="form-group col-12">
-                        <label class="label" for="video_file">Видео</label>
-                        <input id="video_file" type="file" class="form-control" placeholder="Фото" ng-model="article_new.video">
-                    </div>
-                    <div class="col-12">
-                        <div class="btn btn-primary" ng-click="change_password_form_submit(settings_block)">Добавить</div>
-                    </div>
+                    <form action="{% url 'article_create' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group col-12">
+                            <label class="label" for="title">Заголовок<span style="color: red;">*</span></label>
+                            <input id="title" name="title" type="text" class="form-control" placeholder="Заголовок" ng-model="article_new.title">
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="mc_text">Текст<span style="color: red;">*</span></label>
+                            <textarea id="mc_text" name="text" type="text" class="form-control" placeholder="Текст" rows="10" ng-model="article_new.text"></textarea>
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="photo_file">Фото<span style="color: red;">*</span></label>
+                            <input id="photo_file" name="photo_file" type="file" class="form-control" placeholder="Фото" ng-model="article_new.photo">
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="label" for="video_file">Видео</label>
+                            <input id="video_file" name="video_file" type="file" class="form-control" placeholder="Фото" ng-model="article_new.video">
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary">Добавить</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

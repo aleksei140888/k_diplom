@@ -73,7 +73,7 @@ def make_shop(request):
 
     for method in DeliveryMethod.objects.all():
         ActiveDeliveryMethods.objects.create(shop_id=shop.id, delivery_method_id=method.id)
-    
+
     return HttpResponse(resp.return_success())
 
 
@@ -94,7 +94,7 @@ def card(request, card_id):
 
     card_obj = Card.objects.filter(user_id=card_id).filter(status_id=1).first()
 
-    if not card_obj:
+    if not card_obj or not card_obj.products.all():
         return redirect('home_page')
 
     active_methods = ActiveDeliveryMethods.objects.filter(shop_id=card_obj.shop.id).all()
@@ -137,10 +137,10 @@ def card_item(request):
     elif request.method == "DELETE":
         data = json.loads(request.body.decode('utf-8'))
 
-        item = CardItem.objects.get(id=data['card_item_id'])
+        item = CardItem.objects.filter(card__user_id=request.user.id, item_id=data['card_item_id']).first()
         item.delete()
 
-        resp.set_response('Товар успешно удален.')
+        resp.set_response(data['card_item_id'])
 
         return HttpResponse(resp.return_success())
 
