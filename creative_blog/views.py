@@ -111,7 +111,7 @@ def article_create(request):
         extension='jpg',
     )
 
-    if request.FILES['video_file2']:
+    if 'video_file2' in request.FILES:
         video = MasterClassVideo.objects.create(
             master_class_id=article.id,
             filename=request.FILES['video_file2'],
