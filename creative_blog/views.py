@@ -1,12 +1,18 @@
+import json
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from creative_blog.models import MasterClass
-from live_portal.utils import to_dict_list
+from live_portal.utils import to_dict_list, activity
 from main_site.models import User
 
 
 def all_blogs(request):
+    activity(request)
+
     blog_objects = MasterClass.objects.all()
     paginator = Paginator(blog_objects, 5)
     page = request.GET.get('page')
@@ -24,6 +30,8 @@ def all_blogs(request):
 
 
 def blog(request, user_id):
+    activity(request)
+
     blog_objects = MasterClass.objects.filter(author_id=user_id)
     user = User.objects.filter(id=user_id).first()
 
@@ -50,9 +58,39 @@ def blog(request, user_id):
 
 
 def article(request, article_id):
+    activity(request)
+
     article = MasterClass.objects.filter(id=article_id).first()
 
     if not article:
         return redirect('home_page')
 
     return render(request, 'article.html', context={'article': article.to_dict_full()})
+
+
+def blog_get_masterclasses(request):
+    mcs = request.user.master_classes.all()
+
+    products_dict = {'data': []}
+    for mc in mcs:
+        products_dict['data'].append([
+            mc.id,
+            mc.title,
+            mc.text[:70],
+            f'<button class="btn btn-warning" onclick="window.open({reverse("edit_master_class_window", args=[mc.id])})"><i class="fa fa-pencil"></i></button>'
+            f'<a href="{reverse("delete_master_class", args=[mc.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
+        ])
+    return HttpResponse(json.dumps(products_dict))
+
+
+def delete_master_class(request, article_id):
+    mc = MasterClass.objects.filter(article_id).first()
+    mc.delete()
+    return redirect(reverse('user_page', args=[request.user.id]))
+
+
+def edit_master_class_window(request, article_id):
+    activity(request)
+
+    product_obj = MasterClass.objects.filter(id=article_id).first()
+    return render(request, 'window_edit_product.html', context={'product': product_obj})

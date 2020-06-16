@@ -9,15 +9,18 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
+from django.utils.datetime_safe import date
 
 from creative_shop.models import Shop, Product, DeliveryMethod, Card, CardItem, ActiveDeliveryMethods
 from live_portal import settings
-from live_portal.utils import to_dict_list, MobileResponse
-from main_site.models import User
+from live_portal.utils import to_dict_list, MobileResponse, activity
+from main_site.models import User, ActivityLog
 from cloudipsp import Api, Checkout
 
 
 def all_shops(request):
+    activity(request)
+
     shop_objects = Shop.objects.all()
 
     if not shop_objects:
@@ -39,6 +42,8 @@ def all_shops(request):
 
 
 def shop(request, shop_id):
+    activity(request)
+
     shop_obj = Shop.objects.filter(id=shop_id).first()
     products = to_dict_list(Product.objects.filter(shop_id=shop_id).all())
 
@@ -73,6 +78,8 @@ def make_shop(request):
 
 
 def product(request, product_id):
+    activity(request)
+
     product_obj = Product.objects.filter(id=product_id).first()
     delivery_methods = DeliveryMethod.objects.all()
 
@@ -83,7 +90,8 @@ def product(request, product_id):
 
 
 def card(request, card_id):
-    print(card_id)
+    activity(request)
+
     card_obj = Card.objects.filter(user_id=card_id).filter(status_id=1).first()
 
     if not card_obj:
@@ -166,6 +174,7 @@ def payment_make(request):
 
 
 def success_payment(request):
+    activity(request)
 
     card = request.user.cards.filter(status_id=1).first()
     card.status_id = 2
@@ -175,24 +184,49 @@ def success_payment(request):
 
 
 def error_payment(request):
+    activity(request)
 
     return render(request, 'error_payment.html')
+
+
+def shop_set_in_delivery_status(request, card_item_id):
+    card_item = CardItem.objects.filter(id=card_item_id).first()
+    if card_item:
+        card_item.card.status_id = 3
+        card_item.card.save()
+
+    return redirect(reverse('user_page', args=[request.user.id]))
+
+
+def shop_set_in_completed_status(request, card_item_id):
+    card_item = CardItem.objects.filter(id=card_item_id).first()
+    if card_item:
+        card_item.card.status_id = 4
+        card_item.card.save()
+
+    return redirect(reverse('user_page', args=[request.user.id]))
 
 
 def shop_get_owner_cards(request):
     cards = request.user.shops.first().cards.all()
     products_dict = {'data': []}
-    for product in products:
-        products_dict['data'].append([
-            product.id,
-            product.name,
-            product.category.name,
-            str(product.old_price),
-            str(product.new_price),
-            str(product.rating),
-            f'<button class="btn btn-warning" onclick="window.open({reverse("edit_product_window", args=[product.id])})"><i class="fa fa-pencil"></i></button>'
-            f'<a href="{reverse("delete_product", args=[product.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
-        ])
+    for card in cards:
+        for item in card.products.all():
+            button = ''
+            if card.status.id == 2:
+                button = f'<a href="{reverse("shop_set_in_delivery_status", args=[item.id])}" style="margin-left: 10px;"><button class="btn btn-warning" title="В процессе доставки"><i class="fa fa-check"></i></button></a>'
+            elif card.status.id == 3:
+                button = f'<a href="{reverse("shop_set_in_completed_status", args=[item.id])}" style="margin-left: 10px;"><button class="btn btn-warning" title="Выполнено"><i class="fa fa-check"></i></button></a>'
+            products_dict['data'].append([
+                item.card.id,
+                item.item.name,
+                str(item.item.new_price),
+                card.user.first_name + ' ' + card.user.last_name,
+                str(card.user.phone_number),
+                card.delivery_method.name,
+                card.status.name_ru,
+                button,
+            ])
     return HttpResponse(json.dumps(products_dict))
 
 
@@ -254,5 +288,22 @@ def edit_product(request):
 
 
 def edit_product_window(request, product_id):
+    activity(request)
+
     product_obj = Product.objects.filter(id=product_id).first()
     return render(request, 'window_edit_product.html', context={'product': product_obj})
+
+
+def shop_get_pursaches(request):
+    pursaches = request.user.cards.all()
+    products_dict = {'data': []}
+    for card in pursaches:
+        for card_item in card.products.all():
+            products_dict['data'].append([
+                card.id,
+                card_item.item.name,
+                str(card_item.item.new_price),
+                card.delivery_method.name,
+                card.status.name_ru,
+            ])
+    return HttpResponse(json.dumps(products_dict))

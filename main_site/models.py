@@ -46,7 +46,7 @@ class ActivityLog(models.Model):
     user = models.ForeignKey(User, related_name="user_log", related_query_name="activity_logs",
                              on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    visited_pages_count = models.IntegerField()
+    visited_pages_count = models.IntegerField(default=1)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)

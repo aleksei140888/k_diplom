@@ -12,11 +12,13 @@ from django.shortcuts import render, redirect
 from creative_blog.models import MasterClass
 from creative_shop.models import Shop, Product, ProductCategory
 from live_portal import settings
-from live_portal.utils import to_dict_list, MobileResponse, mobile_400, mobile_200
-from main_site.models import User
+from live_portal.utils import to_dict_list, MobileResponse, mobile_400, mobile_200, activity
+from main_site.models import User, ActivityLog
 
 
 def home_page(request):
+    activity(request)
+
     shops = Shop.objects.all().order_by('-rating')[:4]
     products = Product.objects.all().order_by('-rating')[:4]
     users = to_dict_list(User.objects.all().order_by('-rating')[:4])
@@ -49,6 +51,8 @@ def get_card_items_count(request):
 
 @login_required(login_url='/auth/')
 def user_page(request, user_id):
+    activity(request)
+
     user = User.objects.filter(id=user_id).first()
     categories = ProductCategory.objects.all()
     if not user:
@@ -77,6 +81,8 @@ def load_profile(request):
 
 @login_required(login_url='/auth/')
 def user(request, user_id):
+    activity(request)
+
     user = User.objects.filter(id=user_id).first()
 
     if not user:
@@ -86,8 +92,10 @@ def user(request, user_id):
 
 
 def all_users_page(request):
+    activity(request)
+
     users = User.objects.all()
-    paginator = Paginator(users, 10)
+    paginator = Paginator(users, 8)
     page = request.GET.get('page')
 
     try:
@@ -184,5 +192,7 @@ def check_number(request):
 
 
 def help_page(request):
+    activity(request)
+
     return render(request, 'help.html')
 

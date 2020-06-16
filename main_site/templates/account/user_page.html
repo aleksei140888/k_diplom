@@ -137,7 +137,32 @@
 
             <!-- Блок Покупок -->
             <div class="container" ng-show="active_tab === 'purchases'">
-                <h3 class="text-center" style="border: 1px solid lightgray; background-color: rgba(153, 153, 153, 0.5); padding: 10px 0;">Покупки</h3>
+                <div>
+                    <h3 class="text-center">Покупки</h3>
+                </div>
+                <div class="col-12">
+                    <table id="pursaches" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Метод доставки</th>
+                                <th>Статус</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Метод доставки</th>
+                                <th>Статус</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
 
 
@@ -148,7 +173,26 @@
                     <div class="col-12">
                         <button class="btn btn-success pull-right" ng-click="change_active_tab('blog_add_article')">Добавить статью</button>
                     </div>
-                    <div class="col-12" ng-repeat="article in articles">#{ article.title }#</div>
+                    <div class="col-12">
+                        <table id="masterclasses" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Заголовок</th>
+                                    <th>Текст</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Заголовок</th>
+                                    <th>Текст</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -230,26 +274,29 @@
                                         <h3 class="text-center">Покупки</h3>
                                     </div>
                                     <div class="col-12">
-                                        <table id="products" class="display" style="width:100%">
+                                        <table id="cards" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th>ID заказа</th>
                                                     <th>Название</th>
-                                                    <th>Категория</th>
                                                     <th>Цена</th>
-                                                    <th>Новая цена</th>
-                                                    <th>Рейтинг</th>
+                                                    <th>Имя</th>
+                                                    <th>Номер</th>
+                                                    <th>Метод доставки</th>
+                                                    <th>Статус</th>
                                                     <th>Действия</th>
+
                                                 </tr>
                                             </thead>
                                             <tfoot>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th>ID заказа</th>
                                                     <th>Название</th>
-                                                    <th>Категория</th>
-                                                    <th>Старая цена</th>
-                                                    <th>Новая цена</th>
-                                                    <th>Рейтинг</th>
+                                                    <th>Цена</th>
+                                                    <th>Имя</th>
+                                                    <th>Номер</th>
+                                                    <th>Метод доставки</th>
+                                                    <th>Статус</th>
                                                     <th>Действия</th>
                                                 </tr>
                                             </tfoot>
@@ -449,6 +496,15 @@
     $(document).ready(function() {
         $('#products').DataTable( {
             "ajax": "{% url 'shop_get_owner_products' %}"
+        } );
+        $('#cards').DataTable( {
+            "ajax": "{% url 'shop_get_owner_cards' %}"
+        } );
+        $('#pursaches').DataTable( {
+            "ajax": "{% url 'shop_get_pursaches' %}"
+        } );
+        $('#masterclasses').DataTable( {
+            "ajax": "{% url 'blog_get_masterclasses' %}"
         } );
     } );
 

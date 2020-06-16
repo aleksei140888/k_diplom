@@ -21,7 +21,11 @@ from creative_shop import views
 urlpatterns = [
     path('success_payment/', views.success_payment, name='success_payment'),
     path('error_payment/', views.error_payment, name='error_payment'),
+    path('shop_get_pursaches/', views.shop_get_pursaches, name='shop_get_pursaches'),
+    path('shop_get_owner_cards/', views.shop_get_owner_cards, name='shop_get_owner_cards'),
     path('shop_get_owner_products/', views.shop_get_owner_products, name='shop_get_owner_products'),
+    path('shop_set_in_delivery_status/<int:card_item_id>/', views.shop_set_in_delivery_status, name='shop_set_in_delivery_status'),
+    path('shop_set_in_completed_status/<int:card_item_id>/', views.shop_set_in_completed_status, name='shop_set_in_completed_status'),
     path('product/<int:product_id>/', views.product, name='product'),
     path('card/product/delete/', views.card_item, name='card_delete_item'),
     path('card/product/add/', views.card_item, name='card_add_item'),
