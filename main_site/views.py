@@ -199,17 +199,18 @@ def help_page(request):
     return render(request, 'help.html')
 
 
-def update_profile(request):
+def update_profile(request, user_id):
     data = request.POST
-    user = User.objects.filter(id=data['id']).first()
-    user.first_name = data['first_name']
-    user.last_name = data['last_name']
+    user = User.objects.filter(id=user_id).first()
+    user.first_name = data['first_name1']
+    user.last_name = data['last_name1']
     user.bio = data['bio_area']
-    user.email = data['email']
+    user.email = data['email1']
     user.save()
 
-    if request.FILES['photo']:
-        user.photo = request.FILES['photo']
+    if request.FILES['photo1']:
+        user.photo = request.FILES['photo1']
         user.save()
 
     return redirect(reverse('user_page', args=[request.user.id]))
+
