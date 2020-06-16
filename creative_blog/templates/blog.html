@@ -29,7 +29,7 @@
                 <div class="content-grid-info">
                     <h3><a href="{% url 'article' article.id %}">{{ article.title }}</a></h3>
                     <p>{{ article.text }}</p>
-                    <img src="{% static article.photo %}" alt="" style="width: 100%;">
+                    <img src="{% static article.photo %}" alt="" style="max-width: 75%;">
                 </div>
             </div>
         {% endfor %}
