@@ -28,23 +28,22 @@
         var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
         chart.draw(data, options);
 
-        function drawChart() {
+
+      }
+      function drawChar_ajax() {
           var jsonData = $.ajax({
-              type: "post",
-              url: "",
+              url: '{% url 'get_stat_by_dates' %}',
+              data: {'start_date': String(document.getElementById('start_date').value),'end_date':String(document.getElementById('end_date').value)},
               dataType: "json",
               async: false
               }).responseText;
-
           // Create our data table out of JSON data loaded from server.
-          var data = new google.visualization.DataTable(jsonData);
-
+          var data = new google.visualization.arrayToDataTable($.parseJSON(jsonData));
           // Instantiate and draw our chart, passing in some options.
           var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 400, height: 240});
+          chart.draw(data, {width: 765, height: 500});
         }
-
-      }
+        drawChar_ajax()
     </script>
     <style>
     .cart IMG { position: relative; }
@@ -478,16 +477,16 @@
                     <div>
                         <h4>Диапазон статистики</h4>
                         <br>
-                        <label for="from_date">
+                        <label for="start_date">
                             От:
-                            <input id="from_date" type="date">
+                            <input id="start_date" type="date">
                         </label>
 
-                        <label for="to_date">
+                        <label for="end_date">
                             До:
-                            <input id="to_date" type="date">
+                            <input id="end_date" type="date">
                         </label>
-                            <button class="btn btn-primary">Применить</button>
+                            <button class="btn btn-primary" onclick="drawChar_ajax()">Применить</button>
                     </div>
                     <hr>
                     <!--Div that will hold the pie chart-->

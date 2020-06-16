@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from random import randint
 
 import requests
@@ -44,10 +45,12 @@ def home_page(request):
 def get_card_items_count(request):
     ajax_resp = MobileResponse()
     ajax_resp.set_response({
-            'card_products_count': request.user.cards.filter(status_id=1).first().products.count() if request.user.is_authenticated and
-                                                                                  request.user.cards.filter(status_id=1).first() and
-                                                                                  request.user.cards.filter(status_id=1).first().products.first() else '0'
-        })
+        'card_products_count': request.user.cards.filter(
+            status_id=1).first().products.count() if request.user.is_authenticated and
+                                                     request.user.cards.filter(status_id=1).first() and
+                                                     request.user.cards.filter(
+                                                         status_id=1).first().products.first() else '0'
+    })
     return HttpResponse(ajax_resp.return_success())
 
 
@@ -109,7 +112,8 @@ def all_users_page(request):
         # Если страница больше максимальной, доставить последнюю страницу результатов
         users = paginator.page(paginator.num_pages)
 
-    return render(request, 'account/all_users.html', context={'page_obj': page, 'users': users, 'users_dict': to_dict_list(users)})
+    return render(request, 'account/all_users.html',
+                  context={'page_obj': page, 'users': users, 'users_dict': to_dict_list(users)})
 
 
 def auth_page(request):
@@ -185,7 +189,8 @@ def check_number(request):
         ucaller_link = f'https://api.ucaller.ru/v1.0/initCall?service_id={settings.UCALLER_ID}&key={settings.UCALLER_SECRET_KEY}&phone={data["phone_number"]}&code={code}'
         ucaller_request = requests.get(ucaller_link)
     except Exception:
-        resp.add_error('request/confirm', 'Произошла ошибка, возможно, вы не подключены к интернету или сервис не доступен.')
+        resp.add_error('request/confirm',
+                       'Произошла ошибка, возможно, вы не подключены к интернету или сервис не доступен.')
         return HttpResponse(resp.return_error())
 
     resp.set_response(code)
@@ -214,3 +219,21 @@ def update_profile(request, user_id):
 
     return redirect(reverse('user_page', args=[request.user.id]))
 
+
+def get_stat_by_dates(request):
+    try:
+        data = request.GET
+    except Exception:
+        data = {
+            'start_date': '2020-06-10',
+            'end_date': date.today().strftime('%Y-%m-%d')
+        }
+    print(data)
+    logs = ActivityLog.objects.filter(date__lte=data['end_date']).filter(date__gte=data['start_date'])
+    array_log = [['Date', 'Visiting']]
+    for log in logs[::-1]:
+        array_log.append([
+            str(log.date),
+            log.visited_pages_count
+        ])
+    return HttpResponse(json.dumps(array_log))
