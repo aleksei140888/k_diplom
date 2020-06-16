@@ -208,6 +208,9 @@ def shop_set_in_completed_status(request, card_item_id):
 
 
 def shop_get_owner_cards(request):
+    if not request.user or not request.user.shops.first() or request.user.shops.first().cards.all():
+        return HttpResponse(json.dumps({'data': []}))
+
     cards = request.user.shops.first().cards.all()
     products_dict = {'data': []}
     for card in cards:
@@ -295,6 +298,8 @@ def edit_product_window(request, product_id):
 
 
 def shop_get_pursaches(request):
+    if not request.user or not request.user.cards.all():
+        return HttpResponse(json.dumps({'data': []}))
     pursaches = request.user.cards.all()
     products_dict = {'data': []}
     for card in pursaches:
