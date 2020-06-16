@@ -99,7 +99,6 @@ def edit_master_class_window(request, article_id):
 def article_create(request):
 
     data = request.POST
-    print(data)
     article = MasterClass.objects.create(
         title=data['title'],
         text=data['text'],
@@ -108,14 +107,14 @@ def article_create(request):
 
     photo = MasterClassPhoto.objects.create(
         master_class_id=article.id,
-        filename=request.FILES['photo_file'],
+        filename=request.FILES['photo_file2'],
         extension='jpg',
     )
 
-    if request.FILES['video_file']:
+    if request.FILES['video_file2']:
         video = MasterClassVideo.objects.create(
             master_class_id=article.id,
-            filename=request.FILES['video_file'],
+            filename=request.FILES['video_file2'],
             extension='mp4',
         )
     return redirect(reverse('user_page', args=[request.user.id]))
