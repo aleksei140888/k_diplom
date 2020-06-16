@@ -9,6 +9,8 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse
+
 from creative_blog.models import MasterClass
 from creative_shop.models import Shop, Product, ProductCategory
 from live_portal import settings
@@ -196,3 +198,18 @@ def help_page(request):
 
     return render(request, 'help.html')
 
+
+def update_profile(request):
+    data = request.POST
+    user = User.objects.filter(id=data['id']).first()
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.bio = data['bio_area']
+    user.email = data['email']
+    user.save()
+
+    if request.FILES['photo']:
+        user.photo = request.FILES['photo']
+        user.save()
+
+    return redirect(reverse('user_page', args=[request.user.id]))
