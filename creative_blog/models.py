@@ -22,8 +22,8 @@ class MasterClass(models.Model):
             'author': self.author.to_dict(),
             'created_at': self.created_at,
             'updated_at': self.updated_at,
-            'photo': 'media/' + photo.filename.url if photo else 'images/article_img.png',
-            'video': 'media/' + video.filename.url if video else False,
+            'photo': photo.filename.url if photo else 'images/article_img.png',
+            'video': video.filename.url if video else False,
         }
 
     def to_dict_full(self):
@@ -37,8 +37,8 @@ class MasterClass(models.Model):
             'author': self.author.to_dict(),
             'created_at': self.created_at,
             'updated_at': self.updated_at,
-            'photo': 'media/' + photo.filename.url if photo else 'images/article_img.png',
-            'video': 'media/' + video.filename.url if video else False,
+            'photo': photo.filename.url if photo else 'images/article_img.png',
+            'video': video.filename.url if video else False,
         }
 
 
