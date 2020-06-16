@@ -78,7 +78,7 @@ def blog_get_masterclasses(request):
             mc.title,
             mc.text[:70],
             f'<button class="btn btn-warning" onclick="window.open({reverse("edit_master_class_window", args=[mc.id])})"><i class="fa fa-pencil"></i></button>'
-            f'<a href="{reverse("delete_master_class", args=[mc.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
+            f'<a href="{reverse("article_delete", args=[mc.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
         ])
     return HttpResponse(json.dumps(products_dict))
 
@@ -117,4 +117,15 @@ def article_create(request):
             filename=request.FILES['video_file2'],
             extension='mp4',
         )
+    return redirect(reverse('user_page', args=[request.user.id]))
+
+
+def article_delete(request, article_id):
+    article = MasterClass.objects.filter(id=article_id).first()
+
+    article.photo.all().delete() if article.photo.all() else ''
+    article.video.all().delete() if article.video.all() else ''
+
+    article.delete()
+
     return redirect(reverse('user_page', args=[request.user.id]))
