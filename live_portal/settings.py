@@ -138,7 +138,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = 'static/'
 
 AUTH_USER_MODEL = 'main_site.User'
 
