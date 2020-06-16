@@ -76,7 +76,6 @@ def blog_get_masterclasses(request):
         products_dict['data'].append([
             mc.id,
             mc.title,
-            mc.text[:70],
             f'<button class="btn btn-warning" onclick="window.open({reverse("edit_master_class_window", args=[mc.id])})"><i class="fa fa-pencil"></i></button>'
             f'<a href="{reverse("article_delete", args=[mc.id])}" style="margin-left: 10px;"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>',
         ])
